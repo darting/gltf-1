@@ -8,6 +8,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'package:vector_math/vector_math.dart';
 import 'dart:mirrors';
+import 'dart:async';
 
 
 part 'src/node.dart';

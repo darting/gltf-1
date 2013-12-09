@@ -2,5 +2,5 @@ part of orange;
 
 
 class StringHelper {
-  static capitalize(String str) => str[0] + str.substring(1);
+  static capitalize(String str) => str[0].toUpperCase() + str.substring(1);
 }

@@ -2,7 +2,8 @@ part of orange;
 
 
 class Loader {
-  
+  String _path;
+  Scene _scene;
   Map<String, Buffer> _buffers = new Map();
   Map<String, BufferView> _bufferViews = new Map();
   Map<String, html.ImageElement> _images = new Map();
@@ -11,10 +12,20 @@ class Loader {
   Map<String, Mesh> _meshes = new Map();
   Map<String, Node> _nodes = new Map();
 
-  Loader(String path) {
-    html.HttpRequest.getString(path)
-      .then((rsp) => _parse(JSON.decode(rsp)))
-        .catchError((e) => print(e));
+  Loader(this._path);
+  
+  Future<Scene> start() {
+    var completer = new Completer<Scene>();
+    html.HttpRequest.getString(_path)
+      .then((rsp){
+          if(_parse(JSON.decode(rsp))){
+            completer.complete(_scene);
+          }else{
+            completer.completeError("parse failure");
+          }
+      })
+      .catchError((Error e) => print([e, e.stackTrace]));
+    return completer.future;
   }
   
   _parse(json) {
@@ -22,11 +33,12 @@ class Loader {
                                "shaders", "programs", "techniques", "materials", "indices", "attributes", "accessors",
                                "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
     InstanceMirror mirror = reflect(this);
-    categoriesDepsOrder.every((category){
+    return categoriesDepsOrder.every((category){
       var description = json[category];
-      return mirror.invoke(new Symbol("handle${StringHelper.capitalize(category)}"), [description]);
+      if(description != null)
+        return mirror.invoke(new Symbol("handle${StringHelper.capitalize(category)}"), [description]).reflectee;
+      return true;
     });
-    
   }
   
   handleBuffers(Map description) {
@@ -138,13 +150,22 @@ class Loader {
       mesh.name = v["name"];
       var primitives = v["primitives"];
       mesh.primitives = new List.generate(primitives.length, (i){
+        var p = primitives[i];
         var primitive = new Primitive();
-        primitive.indices = _attributes[v["indices"]];
-        primitive.semantics = v["semantics"];
+        primitive.indicesAttr = _attributes[p["indices"]];
+        primitive.primitive = p["primitive"];
+        p["attributes"].forEach((ak, av){
+          if(ak == "NORMAL") primitive.normalAttr = _attributes[av];
+          if(ak == "POSITION") primitive.positionAttr = _attributes[av];
+          if(ak == "TEXCOORD_0") primitive.texCoordAttr = _attributes[av];
+          if(ak == "JOINT") primitive.jointAttr = _attributes[av];
+          if(ak == "WEIGHT") primitive.weightAttr = _attributes[av];
+        });
         return primitive;
       }, growable: false);
       _meshes[k] = mesh;
     });
+    return true;
   }
   
   handleCameras(description) {
@@ -161,9 +182,11 @@ class Loader {
   
   handleNodes(Map description) {
     description.forEach((k, v){
+      if(v["light"] != null || v["camera"] != null)
+        return;
       var node = new Node();
       node.name = v["name"];
-      node.childNames = new List();
+      node.childNames = v["children"];
       node.matrix = _newMatrix4FromArray(v["matrix"]);
       var meshes = v["meshes"];
       if(meshes != null) {
@@ -173,10 +196,25 @@ class Loader {
       }
       _nodes[k] = node;
     });
+    return true;
   }
   
-  handleScenes(description) {
-    
+  handleScenes(Map description) {
+    var json = description.values.first;
+    if(json != null) {
+      _scene = new Scene();
+      _scene.nodes = new List();
+      json["nodes"].forEach((name){
+        var node = _nodes[name];
+        if(node != null) {
+          _scene.nodes.add(node);
+          _buildNodeHirerachy(node);
+        }
+      });
+      return true;
+    }else{
+      return false;
+    }
   }
   
   handleAnimations(description) {
@@ -184,10 +222,20 @@ class Loader {
   }
   
   _newMatrix4FromArray(List arr) {
-    return new Matrix4(arr[0], arr[1], arr[2], arr[3],
-        arr[4], arr[5], arr[6], arr[7],
-        arr[8], arr[9], arr[10], arr[11],
-        arr[12], arr[13], arr[14], arr[15]);
+    return new Matrix4(
+        arr[0].toDouble(), arr[1].toDouble(), arr[2].toDouble(), arr[3].toDouble(),
+        arr[4].toDouble(), arr[5].toDouble(), arr[6].toDouble(), arr[7].toDouble(),
+        arr[8].toDouble(), arr[9].toDouble(), arr[10].toDouble(), arr[11].toDouble(),
+        arr[12].toDouble(), arr[13].toDouble(), arr[14].toDouble(), arr[15].toDouble());
+  }
+  
+  _buildNodeHirerachy(Node node) {
+    if(node.children == null)
+      node.children = new List();
+    node.childNames.forEach((child){
+      node.children.add(_nodes[child]);
+      _buildNodeHirerachy(_nodes[child]);
+    });
   }
 }
 

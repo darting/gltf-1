@@ -6,7 +6,7 @@ class MeshAttribute {
   int byteOffset;
   int byteStride;
   int count;
-  String type;
+  int type;
   bool normalized;
   List<double> max;
   List<double> min;
