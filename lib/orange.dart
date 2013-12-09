@@ -24,5 +24,7 @@ part 'src/loader.dart';
 part 'src/string_helper.dart';
 part 'src/image.dart';
 part 'src/scene.dart';
+part 'src/renderer.dart';
+part 'src/director.dart';
 
 

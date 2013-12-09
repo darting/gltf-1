@@ -46,6 +46,7 @@ class Loader {
       var buffer = new Buffer();
       buffer.path = v["path"];
       buffer.byteLength = v["byteLength"];
+      buffer.type = v["type"];
       _buffers[k] = buffer;
     });
     return true;
@@ -193,6 +194,8 @@ class Loader {
         node.meshes = new List.generate(meshes.length, (i){
           return _meshes[meshes[i]];
         }, growable: false);
+      }else{
+        node.meshes = new List(0);
       }
       _nodes[k] = node;
     });
