@@ -19,4 +19,6 @@ class Buffer {
     }
     return completer.future;
   }
+  
+  bool get ready => bytes != null;
 }
