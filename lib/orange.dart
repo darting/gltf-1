@@ -27,5 +27,6 @@ part 'src/scene.dart';
 part 'src/renderer.dart';
 part 'src/director.dart';
 part 'src/technique.dart';
+part 'src/shader.dart';
 
 

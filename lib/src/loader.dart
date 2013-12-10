@@ -30,7 +30,7 @@ class Loader {
   
   _parse(json) {
     var categoriesDepsOrder = ["buffers", "bufferViews", "images",  "videos", "samplers", "textures", 
-                               "shaders", "programs", "techniques", "materials", "indices", "attributes", "accessors",
+                               "shaders", "programs", "techniques", "materials", "accessors",
                                "meshes", "cameras", "lights", "skins", "nodes", "scenes", "animations"];
     InstanceMirror mirror = reflect(this);
     return categoriesDepsOrder.every((category){
@@ -101,33 +101,6 @@ class Loader {
   
   handleMaterials(description) {
     return true;  
-  }
-  
-  handleIndices(Map description) {
-    description.forEach((k, v){
-      var indices = new MeshAttribute();
-      indices.bufferView = _bufferViews[v["bufferView"]];
-      indices.byteOffset = v["byteOffset"];
-      indices.count = v["count"];
-      indices.type = v["type"];
-      _attributes[k] = indices;
-    });
-    return true;
-  }
-  
-  handleAttributes(description) {
-    description.forEach((k, v){
-      var attr = new MeshAttribute();
-      attr.bufferView = _bufferViews[v["bufferView"]];
-      attr.byteOffset = v["byteOffset"];
-      attr.count = v["count"];
-      attr.type = v["type"];
-      attr.max = v["max"];
-      attr.min = v["min"];
-      attr.normalized = v["normalized"];
-      _attributes[k] = attr;
-    });
-    return true;
   }
   
   handleAccessors(description) {

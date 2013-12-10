@@ -2,12 +2,22 @@ part of orange;
 
 
 class Director {
+  
+  static Director _shared;
+  
   html.CanvasElement _canvas;
   Renderer _renderer;
   Scene _scene;
   double _lastElapsed;
   
-  Director(this._canvas) {
+  factory Director(html.CanvasElement canvas) {
+    if(_shared == null){
+      _shared = new Director._internal(canvas);
+    }
+    return _shared;
+  }
+  
+  Director._internal(this._canvas) {
     _renderer = new Renderer(_canvas);
     _lastElapsed = 0.0;
   }
