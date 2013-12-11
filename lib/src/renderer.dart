@@ -4,7 +4,6 @@ part of orange;
 class Renderer {
   html.CanvasElement _canvas;
   gl.RenderingContext ctx;
-  Camera camera;
   
   Renderer(this._canvas) {
     ctx = _canvas.getContext3d(preserveDrawingBuffer: true);
@@ -21,16 +20,16 @@ class Renderer {
   }
   
   render(Scene scene) {
-    scene.nodes.forEach((node) => _renderNode(node));
+    scene.nodes.forEach((node) => _renderNode(scene.camera, node));
   }
   
-  _renderNode(Node node) {
+  _renderNode(Camera camera, Node node) {
     node.meshes.forEach((mesh) {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
-          primitive.shader.bind(this, primitive, node.matrix);
+          primitive.shader.bind(this, camera, primitive, node.matrix);
           ctx.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, primitive.indicesBuffer);
-          ctx.drawElements(gl.TRIANGLES, primitive.indicesAttr.count, gl.UNSIGNED_SHORT, 0);
+          ctx.drawElements(gl.TRIANGLES, primitive.indicesAttr.count, gl.UNSIGNED_SHORT, primitive.indicesAttr.byteOffset);
         } else {
           primitive.setupBuffer(ctx);
           if(primitive.ready) {
@@ -41,7 +40,7 @@ class Renderer {
         }
       });
     });
-    node.children.forEach((n) => _renderNode(n));
+    node.children.forEach((n) => _renderNode(camera, n));
   }
 }
 

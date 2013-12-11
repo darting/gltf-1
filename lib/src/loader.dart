@@ -111,6 +111,7 @@ class Loader {
       var attr = new MeshAttribute();
       attr.bufferView = _bufferViews[v["bufferView"]];
       attr.byteOffset = v["byteOffset"];
+      attr.byteStride = v["byteStride"];
       attr.count = v["count"];
       attr.type = v["type"];
       attr.max = v["max"];
@@ -134,7 +135,7 @@ class Loader {
         p["attributes"].forEach((ak, av){
           if(ak == "NORMAL") primitive.normalAttr = _attributes[av];
           if(ak == "POSITION") primitive.positionAttr = _attributes[av];
-          if(ak == "TEXCOORD_0") primitive.texCoordAttr = _attributes[av];
+          if(ak == "TEXCOORD_0" || ak == "TEXCOORD") primitive.texCoordAttr = _attributes[av];
           if(ak == "JOINT") primitive.jointAttr = _attributes[av];
           if(ak == "WEIGHT") primitive.weightAttr = _attributes[av];
         });

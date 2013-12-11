@@ -13,6 +13,15 @@ class Node {
   Vector3 scale;
   Quaternion rotation;
   
+  Node() {
+    children = new List();
+    matrix = new Matrix4.identity();
+    meshes = new List();
+    position = new Vector3.zero();
+    scale = new Vector3.zero();
+    rotation = new Quaternion.identity();
+  }
+  
   updateTransform() {
     matrix.setFromTranslationRotation(position, rotation);
     matrix.scale(scale);

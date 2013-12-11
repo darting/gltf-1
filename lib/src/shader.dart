@@ -66,6 +66,26 @@ class Shader {
   }
   
   init(gl.RenderingContext ctx) {
+    gl.Shader vertexShader = ctx.createShader(gl.VERTEX_SHADER);
+    ctx.shaderSource(vertexShader, vertexSource);
+    ctx.compileShader(vertexShader);
+
+    gl.Shader fragmentShader = ctx.createShader(gl.FRAGMENT_SHADER);
+    ctx.shaderSource(fragmentShader, fragmentSource);
+    ctx.compileShader(fragmentShader);
+    
+    program = ctx.createProgram();
+    ctx.attachShader(program, vertexShader);
+    ctx.attachShader(program, fragmentShader);
+    ctx.linkProgram(program);
+    
+    var linkedStatus = ctx.getProgramParameter(program, gl.LINK_STATUS);
+    if(!linkedStatus) {
+      print(ctx.getShaderInfoLog(vertexShader));
+      print(ctx.getShaderInfoLog(fragmentShader));
+      print(ctx.getProgramInfoLog(program));
+    }
+    
     vertexPositionAttribute = ctx.getAttribLocation(program, "aVertexPosition");
     ctx.enableVertexAttribArray(vertexPositionAttribute);
     
@@ -77,18 +97,18 @@ class Shader {
     viewMatrixUniform = ctx.getUniformLocation(program, "uViewMatrix");
     normalMatrixUniform = ctx.getUniformLocation(program, "uNormalMatrix");
     colorUniform = ctx.getUniformLocation(program, "uColor");
-    
   }
   
-  bind(Renderer renderer, Primitive primitive, Matrix4 transform) {
+  bind(Renderer renderer, Camera camera, Primitive primitive, Matrix4 transform) {
     var ctx = renderer.ctx;
-    var camera = renderer.camera;
+    
+    ctx.useProgram(program);
     
     ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.positionBuffer);
-    ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+    ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, primitive.positionAttr.byteStride, 0);
     
     ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.normalBuffer);
-    ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
+    ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, primitive.normalAttr.byteStride, 0);
     
     var tmp = new Float32List.fromList(new List.filled(16, 0.0));
     

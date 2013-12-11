@@ -16,7 +16,7 @@ class Buffer {
           bytes = r.response;
           _completer.complete();
         });
-      }else{
+      } else {
         _completer.complete();
       }
     }
