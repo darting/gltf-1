@@ -29,8 +29,9 @@ class Primitive {
     if(indicesBuffer == null) {
       if(indicesAttr.bufferView.buffer.ready) {
         indicesBuffer = ctx.createBuffer();
-        ctx.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indicesBuffer);
-        ctx.bufferDataTyped(gl.ELEMENT_ARRAY_BUFFER, indicesAttr.createUint16List(), gl.STATIC_DRAW);
+        ctx.bindBuffer(indicesAttr.bufferView.target, indicesBuffer);
+        var list = indicesAttr.createUint16List();
+        ctx.bufferDataTyped(indicesAttr.bufferView.target, list, gl.STATIC_DRAW);
       } else {
         indicesAttr.bufferView.buffer.load();
       }
@@ -38,8 +39,9 @@ class Primitive {
     if(positionBuffer == null) {
       if(positionAttr.bufferView.buffer.ready) {
         positionBuffer = ctx.createBuffer();
-        ctx.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        ctx.bufferDataTyped(gl.ARRAY_BUFFER, positionAttr.createFloat32List(), gl.STATIC_DRAW);
+        ctx.bindBuffer(positionAttr.bufferView.target, positionBuffer);
+        var list = positionAttr.createFloat32List();
+        ctx.bufferDataTyped(positionAttr.bufferView.target, list, gl.STATIC_DRAW);
       } else {
         positionAttr.bufferView.buffer.load();
       }
@@ -47,8 +49,9 @@ class Primitive {
     if(normalAttr != null && normalBuffer == null) {
       if(normalAttr.bufferView.buffer.ready) {
         normalBuffer = ctx.createBuffer();
-        ctx.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-        ctx.bufferDataTyped(gl.ARRAY_BUFFER, normalAttr.createFloat32List(), gl.STATIC_DRAW);
+        ctx.bindBuffer(normalAttr.bufferView.target, normalBuffer);
+        var list = normalAttr.createFloat32List();
+        ctx.bufferDataTyped(normalAttr.bufferView.target, list, gl.STATIC_DRAW);
       } else {
         normalAttr.bufferView.buffer.load();
       }

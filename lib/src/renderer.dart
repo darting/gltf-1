@@ -29,7 +29,7 @@ class Renderer {
         if(primitive.ready) {
           primitive.shader.bind(this, camera, primitive, node.matrix);
           ctx.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, primitive.indicesBuffer);
-          ctx.drawElements(gl.TRIANGLES, primitive.indicesAttr.count, gl.UNSIGNED_SHORT, primitive.indicesAttr.byteOffset);
+          ctx.drawElements(primitive.primitive, primitive.indicesAttr.count, gl.UNSIGNED_SHORT, primitive.indicesAttr.byteOffset);
         } else {
           primitive.setupBuffer(ctx);
           if(primitive.ready) {
