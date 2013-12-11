@@ -5,4 +5,8 @@ class Scene {
   List<Node> nodes;
   
   Camera camera;
+  
+  update(num elapsed) {
+    
+  }
 }

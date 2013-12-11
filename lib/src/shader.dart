@@ -15,13 +15,20 @@ uniform mat4 uViewMatrix;
 uniform mat4 uNormalMatrix;
 
 varying vec3 vPosition;
-varying vec3 vNormal;
+//varying vec3 vNormal;
+varying highp vec3 vLighting;
 
 void main(void) {
   vec4 pos = uModelMatrix * vec4(aVertexPosition, 1.0);
   gl_Position = uProjectionMatrix * uViewMatrix * pos;
   vPosition = pos.xyz;
-  vNormal = normalize((uNormalMatrix * vec4(aVertexNormal, 0.0)).xyz);
+  //vNormal = normalize((uNormalMatrix * vec4(aVertexNormal, 0.0)).xyz);
+  highp vec3 ambientLight = vec3(0.6, 0.6, 0.6);
+  highp vec3 directionalLightColor = vec3(0.5, 0.5, 0.75);
+  highp vec3 directionalVector = vec3(0.85, 0.8, 0.75);
+  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+  highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+  vLighting = ambientLight + (directionalLightColor * directional);
 }
 """;
 
@@ -32,11 +39,13 @@ precision mediump float;
 uniform vec3 uColor;
 
 varying vec3 vPosition;
-varying vec3 vNormal;
+//varying vec3 vNormal;
+varying highp vec3 vLighting;
 
 void main(void) {
-  float lambert = max(dot(vNormal,vec3(0.,0.,1.)), 0.);
-  gl_FragColor = vec4(lambert * uColor, 1.0);
+  //float lambert = max(dot(vNormal,vec3(0.,0.,1.)), 0.);
+  //gl_FragColor = vec4(lambert * uColor, 1.0);
+  gl_FragColor = vec4(uColor * vLighting, 1.0);
 }
 """;
 
@@ -105,23 +114,26 @@ class Shader {
     ctx.useProgram(program);
     
     ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.positionBuffer);
-    ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, primitive.positionAttr.byteStride, 0);
+    ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
     
     ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.normalBuffer);
-    ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, primitive.normalAttr.byteStride, 0);
+    ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
     
     var tmp = new Float32List.fromList(new List.filled(16, 0.0));
     
     camera.projectionMatrix.copyIntoArray(tmp);
     ctx.uniformMatrix4fv(projectionMatrixUniform, false, tmp);
     
-    camera.copyViewMatrixIntoArray(tmp);
+//    new Matrix4.identity().translate(0.0, 0.0, -10.0).copyIntoArray(tmp);
+    var m = new Matrix4.identity().translate(0.0, 0.0, -10.0);
+    camera.matrix.copyIntoArray(tmp);
     ctx.uniformMatrix4fv(viewMatrixUniform, false, tmp);
     
     var cp = camera.matrix * camera.position;
     cp = camera.position;
     ctx.uniform3fv(cameraPositionUniform, vector3ToFloat32List(cp));
     
+    transform.setTranslation(new Vector3(-1.5, 0.0, -7.0));
     transform.copyIntoArray(tmp);
     ctx.uniformMatrix4fv(modelMatrixUniform, false, tmp);
     

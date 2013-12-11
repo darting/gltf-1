@@ -23,10 +23,6 @@ abstract class Camera extends Node {
     rotation = new Quaternion.fromRotation(makeViewMatrix(position, _focusPosition, WORLD_UP).getRotation());
     rotation.inverse();
   }
-  
-  copyViewMatrixIntoArray(Float32List vm) {
-    matrix.copyIntoArray(vm);
-  }
 
   rotate(Vector3 axis, double angleInRadian) {
     rotation *= new Quaternion.axisAngle(axis, angleInRadian);
@@ -62,7 +58,7 @@ class PerspectiveCamera extends Camera {
     projectionMatrix = makePerspectiveMatrix(radians(fov), aspect, near, far);
   }
   
-  updateMatrix() {
+  updateTransform() {
     super.updateTransform();
     matrix.invert();
   }

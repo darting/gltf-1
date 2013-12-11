@@ -30,7 +30,7 @@ class Primitive {
       if(indicesAttr.bufferView.buffer.ready) {
         indicesBuffer = ctx.createBuffer();
         ctx.bindBuffer(indicesAttr.bufferView.target, indicesBuffer);
-        var list = indicesAttr.createUint16List();
+        var list = indicesAttr.createTypedData();
         ctx.bufferDataTyped(indicesAttr.bufferView.target, list, gl.STATIC_DRAW);
       } else {
         indicesAttr.bufferView.buffer.load();
@@ -40,7 +40,7 @@ class Primitive {
       if(positionAttr.bufferView.buffer.ready) {
         positionBuffer = ctx.createBuffer();
         ctx.bindBuffer(positionAttr.bufferView.target, positionBuffer);
-        var list = positionAttr.createFloat32List();
+        var list = positionAttr.createTypedData();
         ctx.bufferDataTyped(positionAttr.bufferView.target, list, gl.STATIC_DRAW);
       } else {
         positionAttr.bufferView.buffer.load();
@@ -50,7 +50,7 @@ class Primitive {
       if(normalAttr.bufferView.buffer.ready) {
         normalBuffer = ctx.createBuffer();
         ctx.bindBuffer(normalAttr.bufferView.target, normalBuffer);
-        var list = normalAttr.createFloat32List();
+        var list = normalAttr.createTypedData();
         ctx.bufferDataTyped(normalAttr.bufferView.target, list, gl.STATIC_DRAW);
       } else {
         normalAttr.bufferView.buffer.load();

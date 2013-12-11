@@ -18,7 +18,7 @@ class Node {
     matrix = new Matrix4.identity();
     meshes = new List();
     position = new Vector3.zero();
-    scale = new Vector3.zero();
+    scale = new Vector3(1.0, 1.0, 1.0);
     rotation = new Quaternion.identity();
   }
   

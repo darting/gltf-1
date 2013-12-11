@@ -20,10 +20,13 @@ class Renderer {
   }
   
   render(Scene scene) {
+    ctx.viewport(0, 0, _canvas.width, _canvas.height);
+    ctx.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     scene.nodes.forEach((node) => _renderNode(scene.camera, node));
   }
   
   _renderNode(Camera camera, Node node) {
+    node.updateTransform();
     node.meshes.forEach((mesh) {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
