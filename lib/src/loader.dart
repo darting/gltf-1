@@ -3,6 +3,7 @@ part of orange;
 
 class Loader {
   String _path;
+  Uri _uri;
   Scene _scene;
   Map<String, Buffer> _buffers = new Map();
   Map<String, BufferView> _bufferViews = new Map();
@@ -12,7 +13,9 @@ class Loader {
   Map<String, Mesh> _meshes = new Map();
   Map<String, Node> _nodes = new Map();
 
-  Loader(this._path);
+  Loader(this._path) {
+    _uri = Uri.parse(_path);
+  }
   
   Future<Scene> start() {
     var completer = new Completer<Scene>();
@@ -44,7 +47,7 @@ class Loader {
   handleBuffers(Map description) {
     description.forEach((k, v){
       var buffer = new Buffer();
-      buffer.path = v["path"];
+      buffer.path = _uri.resolve(v["path"]).toString();
       buffer.byteLength = v["byteLength"];
       buffer.type = v["type"];
       _buffers[k] = buffer;
@@ -68,7 +71,7 @@ class Loader {
     description.forEach((k, v){
       var image = new Image();
       image.name = v["name"];
-      image.path = v["path"];
+      image.path = _uri.resolve(v["path"]).toString();
       image.generateMipmap = v["generateMipmap"];
       _images[k] = image;
     });

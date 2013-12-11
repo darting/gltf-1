@@ -6,18 +6,21 @@ class Buffer {
   int byteLength;
   String type;
   ByteBuffer bytes;
+  Completer _completer;
   
-  load(){
-    var completer = new Completer();
-    if(bytes == null) {
-      html.HttpRequest.request(path, responseType: "arraybuffer").then((data){
-        bytes = data;
-        completer.complete();
-      });
-    }else{
-      completer.complete();
+  Future load(){
+    if(_completer == null) {
+      _completer = new Completer();
+      if(bytes == null) {
+        html.HttpRequest.request(path, responseType: "arraybuffer").then((r){
+          bytes = r.response;
+          _completer.complete();
+        });
+      }else{
+        _completer.complete();
+      }
     }
-    return completer.future;
+    return _completer.future;
   }
   
   bool get ready => bytes != null;
