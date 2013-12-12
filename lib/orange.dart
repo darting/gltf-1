@@ -29,4 +29,6 @@ part 'src/director.dart';
 part 'src/technique.dart';
 part 'src/shader.dart';
 
-
+// Make it robust
+// 1) detecting WebGL support in the browser
+// 2) detecting a lost context
