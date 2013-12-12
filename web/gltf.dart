@@ -8,7 +8,7 @@ import 'dart:math';
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
-  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+//  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
@@ -174,16 +174,17 @@ mock(gl.RenderingContext ctx) {
   ctx.bufferData(gl.ARRAY_BUFFER, new Float32List.fromList(vertexNormals), gl.STATIC_DRAW);
   
   var primitive = new Primitive();
-  primitive.indicesBuffer = indicesBuffer;
-  primitive.positionBuffer = positionBuffer;
-  primitive.normalBuffer = normalBuffer;
   primitive.primitive = gl.TRIANGLES;
-  primitive.indicesAttr = new MeshAttribute();
-  primitive.indicesAttr.count = 36;
-  primitive.indicesAttr.byteOffset = 0;
-  primitive.positionAttr = new MeshAttribute();
-  primitive.positionAttr.count = 24;
-  primitive.positionAttr.byteOffset = 0;
+  primitive.indices = new MeshAttribute();
+  primitive.indices.count = 36;
+  primitive.indices.byteOffset = 0;
+  primitive.indices.buffer = indicesBuffer;
+  primitive.positions = new MeshAttribute();
+  primitive.positions.count = 24;
+  primitive.positions.byteOffset = 0;
+  primitive.positions.buffer = positionBuffer;
+  primitive.normals = new MeshAttribute();
+  primitive.normals.buffer = normalBuffer;
   primitive.shader = new Shader();
   primitive.shader.init(ctx);
   return primitive;

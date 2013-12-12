@@ -14,12 +14,17 @@ class Primitive {
   
   Shader shader;
   
-  bool get ready => indices.buffer != null && positions.buffer != null;
+  bool get ready => indices.buffer != null && positions.buffer != null && normals.buffer != null;
   
   setupBuffer(gl.RenderingContext ctx) {
     indices.setupBuffer(ctx);
     normals.setupBuffer(ctx);
     positions.setupBuffer(ctx);
+    
+    if(ready) {
+      var a = 1;
+      var b = 2;
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 part of orange;
 
 
-class Buffer {
+class BufferRefs {
   String path;
   int byteLength;
   String type;

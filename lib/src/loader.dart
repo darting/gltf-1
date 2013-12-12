@@ -5,7 +5,7 @@ class Loader {
   String _path;
   Uri _uri;
   Scene _scene;
-  Map<String, Buffer> _buffers = new Map();
+  Map<String, BufferRefs> _buffers = new Map();
   Map<String, BufferView> _bufferViews = new Map();
   Map<String, html.ImageElement> _images = new Map();
   Map<String, Indices> _indices = new Map();
@@ -46,7 +46,7 @@ class Loader {
   
   handleBuffers(Map description) {
     description.forEach((k, v){
-      var buffer = new Buffer();
+      var buffer = new BufferRefs();
       buffer.path = _uri.resolve(v["path"]).toString();
       buffer.byteLength = v["byteLength"];
       buffer.type = v["type"];
@@ -58,7 +58,7 @@ class Loader {
   handleBufferViews(Map description) {
     description.forEach((k, v){
       var bufferView = new BufferView();
-      bufferView.buffer = _buffers[v["buffer"]];
+      bufferView.bufferRefs = _buffers[v["buffer"]];
       bufferView.byteLength = v["byteLength"];
       bufferView.byteOffset = v["byteOffset"];
       bufferView.target = v["target"];

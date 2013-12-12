@@ -15,7 +15,7 @@ part 'src/node.dart';
 part 'src/camera.dart';
 part 'src/mesh.dart';
 part 'src/primitive.dart';
-part 'src/buffer.dart';
+part 'src/buffer_refs.dart';
 part 'src/buffer_view.dart';
 part 'src/indices.dart';
 part 'src/material.dart';
