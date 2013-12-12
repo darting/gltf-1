@@ -31,7 +31,7 @@ class Renderer {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
           primitive.shader.bind(this, camera, primitive, node.matrix);
-          ctx.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, primitive.indices.buffer);
+          ctx.bindBuffer(primitive.indices.bufferView.target, primitive.indices.buffer);
           ctx.drawElements(primitive.primitive, primitive.indices.count, gl.UNSIGNED_SHORT, primitive.indices.byteOffset);
         } else {
           primitive.setupBuffer(ctx);

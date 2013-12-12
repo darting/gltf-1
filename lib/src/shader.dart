@@ -113,10 +113,10 @@ class Shader {
     
     ctx.useProgram(program);
     
-    ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.positions.buffer);
+    ctx.bindBuffer(primitive.positions.bufferView.target, primitive.positions.buffer);
     ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
     
-    ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.normals.buffer);
+    ctx.bindBuffer(primitive.positions.bufferView.target, primitive.normals.buffer);
     ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
     
     var tmp = new Float32List.fromList(new List.filled(16, 0.0));
@@ -124,8 +124,6 @@ class Shader {
     camera.projectionMatrix.copyIntoArray(tmp);
     ctx.uniformMatrix4fv(projectionMatrixUniform, false, tmp);
     
-//    new Matrix4.identity().translate(0.0, 0.0, -10.0).copyIntoArray(tmp);
-    var m = new Matrix4.identity().translate(0.0, 0.0, -10.0);
     camera.matrix.copyIntoArray(tmp);
     ctx.uniformMatrix4fv(viewMatrixUniform, false, tmp);
     
@@ -133,7 +131,6 @@ class Shader {
     cp = camera.position;
     ctx.uniform3fv(cameraPositionUniform, vector3ToFloat32List(cp));
     
-    transform.setTranslation(new Vector3(-1.5, 0.0, -7.0));
     transform.copyIntoArray(tmp);
     ctx.uniformMatrix4fv(modelMatrixUniform, false, tmp);
     
