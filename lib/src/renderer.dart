@@ -26,13 +26,13 @@ class Renderer {
   }
   
   _renderNode(Camera camera, Node node) {
-    node.updateTransform();
+//    node.updateTransform();
     node.meshes.forEach((mesh) {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
           primitive.shader.bind(this, camera, primitive, node.matrix);
-          ctx.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, primitive.indicesBuffer);
-          ctx.drawElements(primitive.primitive, primitive.indicesAttr.count, gl.UNSIGNED_SHORT, primitive.indicesAttr.byteOffset);
+          ctx.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, primitive.indices.buffer);
+          ctx.drawElements(primitive.primitive, primitive.indices.count, gl.UNSIGNED_SHORT, primitive.indices.byteOffset);
         } else {
           primitive.setupBuffer(ctx);
           if(primitive.ready) {

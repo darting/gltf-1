@@ -113,10 +113,10 @@ class Shader {
     
     ctx.useProgram(program);
     
-    ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.positionBuffer);
+    ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.positions.buffer);
     ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
     
-    ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.normalBuffer);
+    ctx.bindBuffer(gl.ARRAY_BUFFER, primitive.normals.buffer);
     ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
     
     var tmp = new Float32List.fromList(new List.filled(16, 0.0));

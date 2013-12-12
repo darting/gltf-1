@@ -130,14 +130,14 @@ class Loader {
       mesh.primitives = new List.generate(primitives.length, (i){
         var p = primitives[i];
         var primitive = new Primitive();
-        primitive.indicesAttr = _attributes[p["indices"]];
+        primitive.indices = _attributes[p["indices"]];
         primitive.primitive = p["primitive"];
         p["attributes"].forEach((ak, av){
-          if(ak == "NORMAL") primitive.normalAttr = _attributes[av];
-          if(ak == "POSITION") primitive.positionAttr = _attributes[av];
-          if(ak == "TEXCOORD_0" || ak == "TEXCOORD") primitive.texCoordAttr = _attributes[av];
-          if(ak == "JOINT") primitive.jointAttr = _attributes[av];
-          if(ak == "WEIGHT") primitive.weightAttr = _attributes[av];
+          if(ak == "NORMAL") primitive.normals = _attributes[av];
+          if(ak == "POSITION") primitive.positions = _attributes[av];
+          if(ak == "TEXCOORD_0" || ak == "TEXCOORD") primitive.texCoord = _attributes[av];
+          if(ak == "JOINT") primitive.joints = _attributes[av];
+          if(ak == "WEIGHT") primitive.weights = _attributes[av];
         });
         return primitive;
       }, growable: false);
