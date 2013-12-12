@@ -31,11 +31,8 @@ class MeshAttribute {
     var offset = byteOffset + bufferView.byteOffset;
     switch(type) {
       case gl.FLOAT_VEC2:
-        return new Float32List.view(bufferView.bufferRefs.bytes, offset, count * byteStride ~/ 4);
       case gl.FLOAT_VEC3:
-        return new Float32List.view(bufferView.bufferRefs.bytes, offset, count * byteStride ~/ 4);
       case gl.FLOAT_VEC4:
-        return new Float32List.view(bufferView.bufferRefs.bytes, offset, count * byteStride ~/ 4);
       case gl.FLOAT:
         return new Float32List.view(bufferView.bufferRefs.bytes, offset, count * byteStride ~/ 4);
       case gl.UNSIGNED_SHORT:
