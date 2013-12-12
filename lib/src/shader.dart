@@ -109,6 +109,22 @@ class Shader {
   }
   
   bind(Renderer renderer, Camera camera, Primitive primitive, Matrix4 transform) {
+    
+    var normal = primitive.normals.list as List;
+    var position = primitive.positions.list as List;
+    var index = primitive.indices.list as List;
+    assert(normal.length == position.length); 
+    var max = 0;
+    index.forEach((i) {
+      if(i > max) max = i;
+    });
+    var count = (max + 1);
+    var posCount = position.length / 3;
+    assert(count <= posCount);
+    assert(posCount == primitive.positions.count);
+    assert(position.length % 3 == 0);
+    
+    
     var ctx = renderer.ctx;
     
     ctx.useProgram(program);
@@ -116,7 +132,7 @@ class Shader {
     ctx.bindBuffer(primitive.positions.bufferView.target, primitive.positions.buffer);
     ctx.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
     
-    ctx.bindBuffer(primitive.positions.bufferView.target, primitive.normals.buffer);
+    ctx.bindBuffer(primitive.normals.bufferView.target, primitive.normals.buffer);
     ctx.vertexAttribPointer(vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
     
     var tmp = new Float32List.fromList(new List.filled(16, 0.0));
