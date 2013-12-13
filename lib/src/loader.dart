@@ -12,6 +12,7 @@ class Loader {
   Map<String, MeshAttribute> _attributes = new Map();
   Map<String, Mesh> _meshes = new Map();
   Map<String, Node> _nodes = new Map();
+  Map<String, Camera> _cameras = new Map();
 
   Loader(this._path) {
     _uri = Uri.parse(_path);
@@ -147,6 +148,13 @@ class Loader {
   }
   
   handleCameras(description) {
+    description.forEach((k, v) {
+      var camera = new PerspectiveCamera(0.0);
+      camera.fov = v["perspective"]["yfov"].toDouble();
+      camera.far = v["perspective"]["zfar"].toDouble();
+      camera.near = v["perspective"]["znear"].toDouble();
+      _cameras[k] = camera;
+    });
     return true;
   }
   
@@ -160,21 +168,26 @@ class Loader {
   
   handleNodes(Map description) {
     description.forEach((k, v){
-      if(v["light"] != null || v["camera"] != null)
+      if(v["light"] != null)
         return;
-      var node = new Node();
-      node.name = v["name"];
-      node.childNames = v["children"];
-      node.matrix = _newMatrix4FromArray(v["matrix"]);
-      var meshes = v["meshes"];
-      if(meshes != null) {
-        node.meshes = new List.generate(meshes.length, (i){
-          return _meshes[meshes[i]];
-        }, growable: false);
-      }else{
-        node.meshes = new List(0);
+      if(v["camera"] != null) {
+        _scene.camera = _cameras[v["camera"]];
+        _scene.camera.applyMatrix(_newMatrix4FromArray(v["matrix"]));
+      } else {
+        var node = new Node();
+        node.name = v["name"];
+        node.childNames = v["children"];
+        node.applyMatrix(_newMatrix4FromArray(v["matrix"]));
+        var meshes = v["meshes"];
+        if(meshes != null) {
+          node.meshes = new List.generate(meshes.length, (i){
+            return _meshes[meshes[i]];
+          }, growable: false);
+        }else{
+          node.meshes = new List(0);
+        }
+        _nodes[k] = node;
       }
-      _nodes[k] = node;
     });
     return true;
   }
@@ -203,16 +216,17 @@ class Loader {
   
   _newMatrix4FromArray(List arr) {
     return new Matrix4(
-        arr[0].toDouble(), arr[1].toDouble(), arr[2].toDouble(), arr[3].toDouble(),
-        arr[4].toDouble(), arr[5].toDouble(), arr[6].toDouble(), arr[7].toDouble(),
-        arr[8].toDouble(), arr[9].toDouble(), arr[10].toDouble(), arr[11].toDouble(),
-        arr[12].toDouble(), arr[13].toDouble(), arr[14].toDouble(), arr[15].toDouble());
+        arr[0].toDouble(), arr[4].toDouble(), arr[8].toDouble(), arr[12].toDouble(),
+        arr[1].toDouble(), arr[5].toDouble(), arr[9].toDouble(), arr[13].toDouble(),
+        arr[2].toDouble(), arr[6].toDouble(), arr[10].toDouble(), arr[14].toDouble(),
+        arr[3].toDouble(), arr[7].toDouble(), arr[11].toDouble(), arr[15].toDouble());
   }
   
   _buildNodeHirerachy(Node node) {
     if(node.children == null)
       node.children = new List();
     node.childNames.forEach((child){
+      _nodes[child].parent = node;
       node.children.add(_nodes[child]);
       _buildNodeHirerachy(_nodes[child]);
     });

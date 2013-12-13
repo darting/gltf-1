@@ -33,8 +33,8 @@ class Director {
   _animate(num elapsed) {
     html.window.requestAnimationFrame(_animate);
     var interval = elapsed - _lastElapsed;
-    _scene.camera.updateTransform();
     _scene.update(elapsed);
+    _scene.camera.updateMatrixWorld();
     _renderer.prepare();
     _renderer.render(_scene);
     _lastElapsed = elapsed;

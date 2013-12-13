@@ -20,11 +20,6 @@ class Primitive {
     indices.setupBuffer(ctx);
     normals.setupBuffer(ctx);
     positions.setupBuffer(ctx);
-    
-    if(ready) {
-      var a = 1;
-      var b = 2;
-    }
   }
 }
 

@@ -8,13 +8,14 @@ import 'dart:math';
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
-  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+//  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
   var camera = new PerspectiveCamera(canvas.width / canvas.height);
-  camera.position.y = 100.0;
-  camera.position.z = 500.0;
+  camera.position.y = 0.0;
+  camera.position.z = 50.0;
 //  camera.lookAt(new Vector3.zero());
   
   
@@ -22,7 +23,10 @@ void main() {
   loader.start().then((scene) {
     var s = new TestScene();
     s.nodes = scene.nodes;
-    s.camera = camera;
+    if(s.camera == null)
+      s.camera = camera;
+    s.camera.aspect = canvas.width / canvas.height;
+    s.camera.updateProjection();
     director.replace(s);
     director.startup();
   });

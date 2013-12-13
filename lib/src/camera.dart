@@ -58,8 +58,8 @@ class PerspectiveCamera extends Camera {
     projectionMatrix = makePerspectiveMatrix(radians(fov), aspect, near, far);
   }
   
-  updateTransform() {
-    super.updateTransform();
+  updateMatrixLocal() {
+    super.updateMatrixLocal();
     matrix.invert();
   }
 }
