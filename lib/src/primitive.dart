@@ -10,9 +10,9 @@ class Primitive {
   MeshAttribute weights;
   Material material;
   int primitive;
-  String semantics;
+  Map<String, MeshAttribute> semantics;
   
-  Shader shader;
+  ProgramShader shader;
   
   bool get ready => indices.buffer != null && positions.buffer != null && normals.buffer != null;
   

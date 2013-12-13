@@ -27,7 +27,14 @@ part 'src/scene.dart';
 part 'src/renderer.dart';
 part 'src/director.dart';
 part 'src/technique.dart';
+part 'src/program_shader.dart';
+part 'src/program.dart';
+part 'src/pass.dart';
+part 'src/sampler.dart';
+part 'src/texture.dart';
 part 'src/shader.dart';
+part 'src/only_once.dart';
+
 
 // Make it robust
 // 1) detecting WebGL support in the browser

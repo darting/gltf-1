@@ -8,7 +8,6 @@ import 'dart:math';
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
-  url = "http://127.0.0.1:3030/gltf/web/rambler/rambler.json";
   url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
   url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
@@ -191,7 +190,7 @@ mock(gl.RenderingContext ctx) {
   primitive.positions.buffer = positionBuffer;
   primitive.normals = new MeshAttribute();
   primitive.normals.buffer = normalBuffer;
-  primitive.shader = new Shader();
+  primitive.shader = new ProgramShader();
   primitive.shader.init(ctx);
   return primitive;
 }

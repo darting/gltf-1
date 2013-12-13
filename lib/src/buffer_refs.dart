@@ -7,17 +7,17 @@ class BufferRefs {
   String type;
   ByteBuffer bytes;
   
-  bool _isLoading = false;
+  OnlyOnce _loadTask;
   
-  load() {
-    if(!ready && !_isLoading) {
-      _isLoading = true;
+  BufferRefs() {
+    _loadTask = new OnlyOnce(() {
       html.HttpRequest.request(path, responseType: "arraybuffer").then((r){
         bytes = r.response;
-        _isLoading = false;
-      }).catchError((_) => _isLoading = false);
-    }
+      });
+    });
   }
+  
+  load() => _loadTask.execute();
   
   bool get ready => bytes != null;
 }

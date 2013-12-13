@@ -7,12 +7,18 @@ class Loader {
   Scene _scene;
   Map<String, BufferRefs> _buffers = new Map();
   Map<String, BufferView> _bufferViews = new Map();
-  Map<String, html.ImageElement> _images = new Map();
+  Map<String, Image> _images = new Map();
+  Map<String, Texture> _textures = new Map();
+  Map<String, Shader> _shaders = new Map();
   Map<String, Indices> _indices = new Map();
   Map<String, MeshAttribute> _attributes = new Map();
   Map<String, Mesh> _meshes = new Map();
   Map<String, Node> _nodes = new Map();
   Map<String, Camera> _cameras = new Map();
+  Map<String, Sampler> _samplers = new Map();
+  Map<String, Program> _programs = new Map();
+  Map<String, Technique> _techniques = new Map();
+  Map<String, Material> _materials = new Map();
 
   Loader(this._path) {
     _uri = Uri.parse(_path);
@@ -83,27 +89,76 @@ class Loader {
     return true;
   }
   
-  handleSamplers(description) {
+  handleSamplers(Map description) {
+    description.forEach((k, v) {
+      var sampler = new Sampler();
+      sampler.magFilter = v["magFilter"];
+      sampler.minFilter = v["minFilter"];
+      sampler.wrapS = v["wrapS"];
+      sampler.wrapT = v["wrapT"];
+      _samplers[k] = sampler;
+    });
     return true;
   }
   
-  handleTextures(description) {
+  handleTextures(Map description) {
+    description.forEach((k, v){
+      var texture = new Texture();
+      texture.sampler = _samplers[v["sampler"]];
+      texture.source = new html.ImageElement();
+      texture.source.dir = _uri.resolve(_images[v["source"]].path).toString();
+      _textures[k] = texture;
+    });
     return true;
   }
   
-  handleShaders(description) {
+  handleShaders(Map description) {
+    description.forEach((k, v){
+      var shader = new Shader();
+      shader.path = _uri.resolve(v["path"]).toString();
+      _shaders[k] = shader;
+    });
     return true;
   }
   
-  handlePrograms(description) {
+  handlePrograms(Map description) {
+    description.forEach((k, v){
+      var program = new Program();
+      program.attributes = v["attributes"];
+      program.fragmentShader = _shaders[v["fragmentShader"]];
+      program.vertexShader = _shaders[v["vertexShader"]];
+      _programs[k] = program;
+    });
     return true;
   }
   
-  handleTechniques(description) {
+  handleTechniques(Map description) {
+    description.forEach((k, v){
+      var technique = new Technique();
+      technique.parameters = v["parameters"];
+      technique.pass = v["pass"];
+      technique.passes = new Map();
+      v["passes"].forEach((k, v){
+        var pass = new Pass();
+        pass.details = v["details"];
+        pass.program = _programs[v["instanceProgram"]["program"]];
+        pass.instanceProgram = v["instanceProgram"];
+        pass.states = v["state"];
+        technique.passes[k] = pass;
+      });
+      _techniques[k] = technique;
+    });
     return true;
   }
   
-  handleMaterials(description) {
+  handleMaterials(Map description) {
+    description.forEach((k, v){
+      var material = new Material();
+      material.name = v["name"];
+      material.technique = _techniques[v["instanceTechnique"]["technique"]];
+      material.instanceTechnique = v["instanceTechnique"];
+      _materials[k] = material;
+    });
     return true;  
   }
   
@@ -133,12 +188,15 @@ class Loader {
         var primitive = new Primitive();
         primitive.indices = _attributes[p["indices"]];
         primitive.primitive = p["primitive"];
+        primitive.material = _materials[p["material"]];
+        primitive.semantics = new Map();
         p["attributes"].forEach((ak, av){
           if(ak == "NORMAL") primitive.normals = _attributes[av];
           if(ak == "POSITION") primitive.positions = _attributes[av];
           if(ak == "TEXCOORD_0" || ak == "TEXCOORD") primitive.texCoord = _attributes[av];
           if(ak == "JOINT") primitive.joints = _attributes[av];
           if(ak == "WEIGHT") primitive.weights = _attributes[av];
+          primitive.semantics[ak] = _attributes[av];
         });
         return primitive;
       }, growable: false);
