@@ -171,8 +171,8 @@ class Loader {
       if(v["light"] != null)
         return;
       if(v["camera"] != null) {
-        _scene.camera = _cameras[v["camera"]];
-        _scene.camera.applyMatrix(_newMatrix4FromArray(v["matrix"]));
+        var camera = _cameras[v["camera"]];
+        camera.applyMatrix(_newMatrix4FromArray(v["matrix"]));
       } else {
         var node = new Node();
         node.name = v["name"];
@@ -202,6 +202,8 @@ class Loader {
         if(node != null) {
           _scene.nodes.add(node);
           _buildNodeHirerachy(node);
+        }else if(_cameras[name] != null) {
+          _scene.camera = _cameras[name];
         }
       });
       return true;
