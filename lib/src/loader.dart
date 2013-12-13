@@ -173,6 +173,7 @@ class Loader {
       if(v["camera"] != null) {
         var camera = _cameras[v["camera"]];
         camera.applyMatrix(_newMatrix4FromArray(v["matrix"]));
+        _nodes[k] = camera;
       } else {
         var node = new Node();
         node.name = v["name"];
@@ -200,10 +201,12 @@ class Loader {
       json["nodes"].forEach((name){
         var node = _nodes[name];
         if(node != null) {
-          _scene.nodes.add(node);
-          _buildNodeHirerachy(node);
-        }else if(_cameras[name] != null) {
-          _scene.camera = _cameras[name];
+          if (node is Camera) {
+            _scene.camera = node;
+          } else if(node is Node) {
+            _scene.nodes.add(node);
+            _buildNodeHirerachy(node);
+          }
         }
       });
       return true;
@@ -218,10 +221,10 @@ class Loader {
   
   _newMatrix4FromArray(List arr) {
     return new Matrix4(
-        arr[0].toDouble(), arr[4].toDouble(), arr[8].toDouble(), arr[12].toDouble(),
-        arr[1].toDouble(), arr[5].toDouble(), arr[9].toDouble(), arr[13].toDouble(),
-        arr[2].toDouble(), arr[6].toDouble(), arr[10].toDouble(), arr[14].toDouble(),
-        arr[3].toDouble(), arr[7].toDouble(), arr[11].toDouble(), arr[15].toDouble());
+        arr[0].toDouble(), arr[1].toDouble(), arr[2].toDouble(), arr[3].toDouble(),
+        arr[4].toDouble(), arr[5].toDouble(), arr[6].toDouble(), arr[7].toDouble(),
+        arr[8].toDouble(), arr[9].toDouble(), arr[10].toDouble(), arr[11].toDouble(),
+        arr[12].toDouble(), arr[13].toDouble(), arr[14].toDouble(), arr[15].toDouble());
   }
   
   _buildNodeHirerachy(Node node) {

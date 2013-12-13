@@ -26,9 +26,18 @@ class Node {
   }
   
   applyMatrix(Matrix4 m) {
-    position.applyProjection(m);
-    scale.applyProjection(m);
+    position = m.getTranslation();
+    scale = _getScaleFromMatrix(m);
     rotation = new Quaternion.fromRotation(m.getRotation());
+  }
+  
+  _getScaleFromMatrix(Matrix4 m) {
+    var v = new Vector3.zero();
+    var sx = v.setValues(m[0], m[1], m[2]).length;
+    var sy = v.setValues(m[4], m[5], m[6]).length;
+    var sz = v.setValues(m[8], m[9], m[10]).length;
+    v.setValues(sx, sy, sz);
+    return v;
   }
   
   updateMatrixLocal() {
