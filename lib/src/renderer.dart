@@ -46,8 +46,8 @@ class Renderer {
             // bind uniforms
             program.uniformSymbols.forEach((symbol) {
               var value;
-              var parameter = pass.instanceProgram["uniforms"][symbol];
-              parameter = technique.parameters[parameter];
+              var parameterName = pass.instanceProgram["uniforms"][symbol];
+              var parameter = technique.parameters[parameterName];
               if(parameter != null) {
                 var semantic = parameter["semantic"];
                 if(semantic != null) {
@@ -66,16 +66,17 @@ class Renderer {
                 if(parameter["source"] != null) {
                   var node = scene.resources[parameter["source"]];
                   value = node.matrixWorld;
-                } else {
+                } else if(parameter["value"] != null) {
                   value = parameter["value"];
+                } else {
+                  value = material.instanceTechnique["values"][parameterName];
                 }
               }
               
-              var texture;
               if(value != null) {
                 var type = program.getTypeForSymbol(symbol);
                 if(type == gl.SAMPLER_CUBE || type == gl.SAMPLER_2D) {
-                  texture = scene.resources[value];
+                  Texture texture = scene.resources[value];
                   if(texture.ready) {
                     ctx.activeTexture(gl.TEXTURE0 + currentTexture);
                     ctx.bindTexture(texture.target, texture.texture);
@@ -135,7 +136,7 @@ class Renderer {
         }
       });
     });
-    node.children.forEach((n) => _renderNode(camera, n));
+    node.children.forEach((n) => _renderNode(scene, n));
   }
 }
 

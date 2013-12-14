@@ -15,7 +15,7 @@ void main() {
   var director = new Director(canvas);
   var camera = new PerspectiveCamera(canvas.width / canvas.height);
   camera.position.y = 0.0;
-  camera.position.z = 50.0;
+  camera.position.z = 500.0;
 //  camera.lookAt(new Vector3.zero());
   
   
@@ -25,10 +25,12 @@ void main() {
     s.resources = scene.resources;
     s.camera = scene.camera;
     s.nodes = scene.nodes;
-    if(s.camera == null)
+    if(s.camera == null) 
       s.camera = camera;
-    s.camera.aspect = canvas.width / canvas.height;
-    s.camera.updateProjection();
+    else {
+      s.camera.aspect = canvas.width / canvas.height;
+      s.camera.updateProjection();
+    }
     director.replace(s);
     director.startup();
   });
