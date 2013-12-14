@@ -5,20 +5,7 @@ class Loader {
   String _path;
   Uri _uri;
   Scene _scene;
-  Map<String, BufferRefs> _buffers = new Map();
-  Map<String, BufferView> _bufferViews = new Map();
-  Map<String, Image> _images = new Map();
-  Map<String, Texture> _textures = new Map();
-  Map<String, Shader> _shaders = new Map();
-  Map<String, Indices> _indices = new Map();
-  Map<String, MeshAttribute> _attributes = new Map();
-  Map<String, Mesh> _meshes = new Map();
-  Map<String, Node> _nodes = new Map();
-  Map<String, Camera> _cameras = new Map();
-  Map<String, Sampler> _samplers = new Map();
-  Map<String, Program> _programs = new Map();
-  Map<String, Technique> _techniques = new Map();
-  Map<String, Material> _materials = new Map();
+  Resources _resources = new Resources();
 
   Loader(this._path) {
     _uri = Uri.parse(_path);
@@ -57,7 +44,7 @@ class Loader {
       buffer.path = _uri.resolve(v["path"]).toString();
       buffer.byteLength = v["byteLength"];
       buffer.type = v["type"];
-      _buffers[k] = buffer;
+      _resources[k] = buffer;
     });
     return true;
   }
@@ -65,11 +52,11 @@ class Loader {
   handleBufferViews(Map description) {
     description.forEach((k, v){
       var bufferView = new BufferView();
-      bufferView.bufferRefs = _buffers[v["buffer"]];
+      bufferView.bufferRefs = _resources[v["buffer"]];
       bufferView.byteLength = v["byteLength"];
       bufferView.byteOffset = v["byteOffset"];
       bufferView.target = v["target"];
-      _bufferViews[k] = bufferView;
+      _resources[k] = bufferView;
     });
     return true;
   }
@@ -80,7 +67,7 @@ class Loader {
       image.name = v["name"];
       image.path = _uri.resolve(v["path"]).toString();
       image.generateMipmap = v["generateMipmap"];
-      _images[k] = image;
+      _resources[k] = image;
     });
     return true;
   }
@@ -96,7 +83,7 @@ class Loader {
       sampler.minFilter = v["minFilter"];
       sampler.wrapS = v["wrapS"];
       sampler.wrapT = v["wrapT"];
-      _samplers[k] = sampler;
+      _resources[k] = sampler;
     });
     return true;
   }
@@ -104,10 +91,12 @@ class Loader {
   handleTextures(Map description) {
     description.forEach((k, v){
       var texture = new Texture();
-      texture.sampler = _samplers[v["sampler"]];
-      texture.source = new html.ImageElement();
-      texture.source.dir = _uri.resolve(_images[v["source"]].path).toString();
-      _textures[k] = texture;
+      texture.sampler = _resources[v["sampler"]];
+      texture.path = _uri.resolve(_resources[v["source"]].path).toString();
+      texture.target = v["target"];
+      texture.format = v["format"];
+      texture.internalFormat = v["internalFormat"];
+      _resources[k] = texture;
     });
     return true;
   }
@@ -116,7 +105,7 @@ class Loader {
     description.forEach((k, v){
       var shader = new Shader();
       shader.path = _uri.resolve(v["path"]).toString();
-      _shaders[k] = shader;
+      _resources[k] = shader;
     });
     return true;
   }
@@ -125,9 +114,9 @@ class Loader {
     description.forEach((k, v){
       var program = new Program();
       program.attributes = v["attributes"];
-      program.fragmentShader = _shaders[v["fragmentShader"]];
-      program.vertexShader = _shaders[v["vertexShader"]];
-      _programs[k] = program;
+      program.fragmentShader = _resources[v["fragmentShader"]];
+      program.vertexShader = _resources[v["vertexShader"]];
+      _resources[k] = program;
     });
     return true;
   }
@@ -141,12 +130,12 @@ class Loader {
       v["passes"].forEach((k, v){
         var pass = new Pass();
         pass.details = v["details"];
-        pass.program = _programs[v["instanceProgram"]["program"]];
+        pass.program = _resources[v["instanceProgram"]["program"]];
         pass.instanceProgram = v["instanceProgram"];
         pass.states = v["state"];
         technique.passes[k] = pass;
       });
-      _techniques[k] = technique;
+      _resources[k] = technique;
     });
     return true;
   }
@@ -155,9 +144,9 @@ class Loader {
     description.forEach((k, v){
       var material = new Material();
       material.name = v["name"];
-      material.technique = _techniques[v["instanceTechnique"]["technique"]];
+      material.technique = _resources[v["instanceTechnique"]["technique"]];
       material.instanceTechnique = v["instanceTechnique"];
-      _materials[k] = material;
+      _resources[k] = material;
     });
     return true;  
   }
@@ -165,7 +154,7 @@ class Loader {
   handleAccessors(description) {
     description.forEach((k, v){
       var attr = new MeshAttribute();
-      attr.bufferView = _bufferViews[v["bufferView"]];
+      attr.bufferView = _resources[v["bufferView"]];
       attr.byteOffset = v["byteOffset"];
       attr.byteStride = v["byteStride"];
       attr.count = v["count"];
@@ -173,7 +162,7 @@ class Loader {
       attr.max = v["max"];
       attr.min = v["min"];
       attr.normalized = v["normalized"];
-      _attributes[k] = attr;
+      _resources[k] = attr;
     });
     return true;
   }
@@ -186,21 +175,16 @@ class Loader {
       mesh.primitives = new List.generate(primitives.length, (i){
         var p = primitives[i];
         var primitive = new Primitive();
-        primitive.indices = _attributes[p["indices"]];
+        primitive.indices = _resources[p["indices"]];
         primitive.primitive = p["primitive"];
-        primitive.material = _materials[p["material"]];
+        primitive.material = _resources[p["material"]];
         primitive.semantics = new Map();
         p["attributes"].forEach((ak, av){
-          if(ak == "NORMAL") primitive.normals = _attributes[av];
-          if(ak == "POSITION") primitive.positions = _attributes[av];
-          if(ak == "TEXCOORD_0" || ak == "TEXCOORD") primitive.texCoord = _attributes[av];
-          if(ak == "JOINT") primitive.joints = _attributes[av];
-          if(ak == "WEIGHT") primitive.weights = _attributes[av];
-          primitive.semantics[ak] = _attributes[av];
+          primitive.semantics[ak] = _resources[av];
         });
         return primitive;
       }, growable: false);
-      _meshes[k] = mesh;
+      _resources[k] = mesh;
     });
     return true;
   }
@@ -211,7 +195,7 @@ class Loader {
       camera.fov = v["perspective"]["yfov"].toDouble();
       camera.far = v["perspective"]["zfar"].toDouble();
       camera.near = v["perspective"]["znear"].toDouble();
-      _cameras[k] = camera;
+      _resources[k] = camera;
     });
     return true;
   }
@@ -226,12 +210,14 @@ class Loader {
   
   handleNodes(Map description) {
     description.forEach((k, v){
-      if(v["light"] != null)
-        return;
-      if(v["camera"] != null) {
-        var camera = _cameras[v["camera"]];
+      if(v["light"] != null) {
+        var light = new Light();
+        light.applyMatrix(_newMatrix4FromArray(v["matrix"]));
+        _resources[k] = light;
+      } else if(v["camera"] != null) {
+        var camera = _resources[v["camera"]];
         camera.applyMatrix(_newMatrix4FromArray(v["matrix"]));
-        _nodes[k] = camera;
+        _resources[k] = camera;
       } else {
         var node = new Node();
         node.name = v["name"];
@@ -240,12 +226,12 @@ class Loader {
         var meshes = v["meshes"];
         if(meshes != null) {
           node.meshes = new List.generate(meshes.length, (i){
-            return _meshes[meshes[i]];
+            return _resources[meshes[i]];
           }, growable: false);
         }else{
           node.meshes = new List(0);
         }
-        _nodes[k] = node;
+        _resources[k] = node;
       }
     });
     return true;
@@ -255,12 +241,15 @@ class Loader {
     var json = description.values.first;
     if(json != null) {
       _scene = new Scene();
+      _scene.resources = _resources;
       _scene.nodes = new List();
       json["nodes"].forEach((name){
-        var node = _nodes[name];
+        var node = _resources[name];
         if(node != null) {
           if (node is Camera) {
             _scene.camera = node;
+          } else if(node is Light) {
+            //TODO : light
           } else if(node is Node) {
             _scene.nodes.add(node);
             _buildNodeHirerachy(node);
@@ -289,9 +278,9 @@ class Loader {
     if(node.children == null)
       node.children = new List();
     node.childNames.forEach((child){
-      _nodes[child].parent = node;
-      node.children.add(_nodes[child]);
-      _buildNodeHirerachy(_nodes[child]);
+      _resources[child].parent = node;
+      node.children.add(_resources[child]);
+      _buildNodeHirerachy(_resources[child]);
     });
   }
 }

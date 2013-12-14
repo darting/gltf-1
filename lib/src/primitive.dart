@@ -3,23 +3,17 @@ part of orange;
 
 class Primitive {
   MeshAttribute indices;
-  MeshAttribute normals;
-  MeshAttribute positions;
-  MeshAttribute texCoord;
-  MeshAttribute joints;
-  MeshAttribute weights;
+  Map<String, MeshAttribute> semantics;
   Material material;
   int primitive;
-  Map<String, MeshAttribute> semantics;
   
-  ProgramShader shader;
-  
-  bool get ready => indices.buffer != null && positions.buffer != null && normals.buffer != null;
+  bool get ready => indices.buffer != null && semantics.keys.every((k) => semantics[k].buffer != null);
   
   setupBuffer(gl.RenderingContext ctx) {
     indices.setupBuffer(ctx);
-    normals.setupBuffer(ctx);
-    positions.setupBuffer(ctx);
+    semantics.forEach((k, v){
+      v.setupBuffer(ctx);
+    });
   }
 }
 

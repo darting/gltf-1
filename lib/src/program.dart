@@ -92,11 +92,11 @@ class Program {
       case gl.FLOAT:
         ctx.uniform1f(location, value); break;
       case gl.FLOAT_VEC2:
-        ctx.uniform2fv(location, _vec(value)); break;
+        ctx.uniform2fv(location, _vec(value, 2)); break;
       case gl.FLOAT_VEC3:
-        ctx.uniform2fv(location, _vec(value)); break;
+        ctx.uniform3fv(location, _vec(value, 3)); break;
       case gl.FLOAT_VEC4:
-        ctx.uniform4fv(location, _vec(value)); break;
+        ctx.uniform4fv(location, _vec(value, 4)); break;
       case gl.INT:
         ctx.uniform1i(location, value); break;
       case gl.SAMPLER_2D:
@@ -106,22 +106,22 @@ class Program {
     }
   }
   
-  _vec(List list) {
-    return new Float32List.fromList(list.map((i) => i.toDouble()).toList(growable: false));
+  _vec(List list, int length) {
+    var l = new List(length);
+    for(var i = 0; i < length; i++)
+      l[i] = list[i].toDouble();
+    return new Float32List.fromList(l);
   }
   
-  _mat3f(Matrix4 m4) {
-    var tmp = new Float32List.fromList(new List.filled(12, 0.0));
-    var m3 = new Matrix3(m4[0], m4[1], m4[2], 
-                        m4[4], m4[5], m4[6],
-                        m4[8], m4[9], m4[10]);
-    m3.copyIntoArray(tmp);    
+  _mat3f(Matrix3 mat) {
+    var tmp = new Float32List.fromList(new List.filled(9, 0.0));
+    mat.copyIntoArray(tmp);
     return tmp;
   }
   
-  _mat4f(Matrix4 matrix) {
+  _mat4f(Matrix4 mat) {
     var tmp = new Float32List.fromList(new List.filled(16, 0.0));
-    matrix.copyIntoArray(tmp);
+    mat.copyIntoArray(tmp);
     return tmp;
   }
 }

@@ -4,6 +4,7 @@ part of orange;
 class Renderer {
   html.CanvasElement _canvas;
   gl.RenderingContext ctx;
+  int _lastMaxEnabledArray = -1;
   
   Renderer(this._canvas) {
     ctx = _canvas.getContext3d(preserveDrawingBuffer: true);
@@ -24,11 +25,12 @@ class Renderer {
     ctx.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     scene.nodes.forEach((node) {
       node.updateMatrixWorld();
-      _renderNode(scene.camera, node);
+      _renderNode(scene, node);
     });
   }
   
-  _renderNode(Camera camera, Node node) {
+  _renderNode(Scene scene, Node node) {
+    var camera = scene.camera;
     node.meshes.forEach((mesh) {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
@@ -39,6 +41,8 @@ class Renderer {
           program.setup(ctx);
           
           if(program.ready) {
+            var currentTexture = 0;
+            var newMaxEnabledArray = -1;
             // bind uniforms
             program.uniformSymbols.forEach((symbol) {
               var value;
@@ -52,17 +56,16 @@ class Renderer {
                   } else if (semantic == "MODELVIEW") {
                     value = node.matrixWorld;
                   } else if (semantic == "MODELVIEWINVERSETRANSPOSE") {
-                    value = new Matrix4.zero();
-                    value.copyInverse(node.matrixWorld);
+                    value = mat4ToInverseMat3(camera.matrixWorld * node.matrixWorld);
                     value.transpose();
-                    
                   }
                 }
               }
               if(value == null && parameter != null) {
                 // find the node be named {source}
                 if(parameter["source"] != null) {
-                  
+                  var node = scene.resources[parameter["source"]];
+                  value = node.matrixWorld;
                 } else {
                   value = parameter["value"];
                 }
@@ -71,10 +74,19 @@ class Renderer {
               var texture;
               if(value != null) {
                 var type = program.getTypeForSymbol(symbol);
-                if(type == gl.SAMPLER_CUBE) {
-                  
-                } else if(type == gl.SAMPLER_2D) {
-                  
+                if(type == gl.SAMPLER_CUBE || type == gl.SAMPLER_2D) {
+                  texture = scene.resources[value];
+                  if(texture.ready) {
+                    ctx.activeTexture(gl.TEXTURE0 + currentTexture);
+                    ctx.bindTexture(texture.target, texture.texture);
+                    var location = program.symbolToLocation[symbol];
+                    if(location != null) {
+                      program.setValueForSymbol(ctx, symbol, currentTexture);
+                      currentTexture++;
+                    }
+                  } else {
+                    texture.setup(ctx);
+                  }
                 } else {
                   program.setValueForSymbol(ctx, symbol, value);
                 }
@@ -84,8 +96,7 @@ class Renderer {
             // bind attributes
             var attributes = pass.instanceProgram["attributes"];
             program.attributeSymbols.forEach((symbol) {
-              var parameter = attributes[symbol];
-              parameter = technique.parameters[parameter];
+              var parameter = technique.parameters[attributes[symbol]];
               var semantic = parameter["semantic"];
               
               var accessor = primitive.semantics[semantic];
@@ -93,14 +104,21 @@ class Renderer {
               ctx.bindBuffer(accessor.bufferView.target, accessor.buffer);
               var location = program.symbolToLocation[symbol];
               if(location != null) {
+                if(location > newMaxEnabledArray) {
+                  newMaxEnabledArray = location;
+                }
                 ctx.enableVertexAttribArray(location);
-                ctx.vertexAttribPointer(location, 3, gl.FLOAT, false, 0, 0);
+                ctx.vertexAttribPointer(location, accessor.byteStride ~/ 4, gl.FLOAT, false, 0, 0);
               }
             });
             
+            for(var i = (newMaxEnabledArray + 1); i < _lastMaxEnabledArray; i++) {
+              ctx.disableVertexAttribArray(i);              
+            }
+            _lastMaxEnabledArray = newMaxEnabledArray;
+            
             ctx.bindBuffer(primitive.indices.bufferView.target, primitive.indices.buffer);
             ctx.drawElements(primitive.primitive, primitive.indices.count, primitive.indices.type, 0);
-            
           }
           
 //          primitive.shader.bind(this, camera, primitive, node.matrixWorld);
@@ -119,6 +137,30 @@ class Renderer {
     });
     node.children.forEach((n) => _renderNode(camera, n));
   }
+}
+
+Matrix3 mat4ToInverseMat3(Matrix4 mat) {
+  var a00 = mat[0], a01 = mat[1], a02 = mat[2],
+      a10 = mat[4], a11 = mat[5], a12 = mat[6],
+      a20 = mat[8], a21 = mat[9], a22 = mat[10],
+      b01 = a22 * a11 - a12 * a21,
+      b11 = -a22 * a10 + a12 * a20,
+      b21 = a21 * a10 - a11 * a20,
+      d = a00 * b01 + a01 * b11 + a02 * b21,
+      id;
+  if (d == 0.0) { return null; }
+  id = 1 / d;
+  var dest = new Matrix3.zero();
+  dest[0] = b01 * id;
+  dest[1] = (-a22 * a01 + a02 * a21) * id;
+  dest[2] = (a12 * a01 - a02 * a11) * id;
+  dest[3] = b11 * id;
+  dest[4] = (a22 * a00 - a02 * a20) * id;
+  dest[5] = (-a12 * a00 + a02 * a10) * id;
+  dest[6] = b21 * id;
+  dest[7] = (-a21 * a00 + a01 * a20) * id;
+  dest[8] = (a11 * a00 - a01 * a10) * id;
+  return dest;
 }
 
 

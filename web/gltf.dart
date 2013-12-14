@@ -22,6 +22,7 @@ void main() {
   var loader = new Loader(url);
   loader.start().then((scene) {
     var s = new TestScene();
+    s.resources = scene.resources;
     s.camera = scene.camera;
     s.nodes = scene.nodes;
     if(s.camera == null)
