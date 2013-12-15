@@ -14,8 +14,10 @@ void main() {
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
   var camera = new PerspectiveCamera(canvas.width / canvas.height);
-  camera.position.y = 0.0;
-  camera.position.z = 500.0;
+  camera.position.x = 10.0;
+  camera.position.y = 700.0;
+  camera.position.z = 1500.0;
+  camera.updateMatrixWorld();
 //  camera.lookAt(new Vector3.zero());
   
   
@@ -60,7 +62,7 @@ class TestScene extends Scene {
   
   update(num elapsed) {
     nodes.forEach((e) {
-      e.rotation.setAxisAngle(WORLD_UP, -elapsed * PI / 1000);
+      e.rotation.setAxisAngle(WORLD_UP, -elapsed * PI / 5000);
     });
   }
   

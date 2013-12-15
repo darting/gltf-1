@@ -41,6 +41,49 @@ class Renderer {
           program.setup(ctx);
           
           if(program.ready) {
+            var blending = 0;
+            var depthTest = 1;
+            var depthMask = 1;
+            var cullFaceEnable = 1;
+            var blendEquation = gl.FUNC_ADD;
+            var sfactor = gl.SRC_ALPHA;
+            var dfactor = gl.ONE_MINUS_SRC_ALPHA;
+            if(pass.states != null) {
+              blending = pass.states["blendEnable"];
+              depthTest = pass.states["depthTestEnable"];
+              depthMask = pass.states["depthMask"];
+              cullFaceEnable = pass.states["cullFaceEnable"];
+              if(pass.states["blendEquation"] != null) {
+                var blendFunc = pass.states["blendFunc"];
+                if(blendFunc != null) {
+                  if(blendFunc["sfactor"] != null) sfactor = blendFunc["sfactor"];
+                  if(blendFunc["dfactor"] != null) dfactor = blendFunc["dfactor"]; 
+                }
+              }
+            }
+            setState(gl.CULL_FACE, cullFaceEnable != 0);
+            setState(gl.BLEND, blending != 0);
+            if(blending > 0) {
+              ctx.blendEquation(blendEquation);
+              ctx.blendFunc(sfactor, dfactor);
+            }
+            var globalIntensity = 1;
+            var transparency = technique.parameters["transparency"];
+            if(transparency != null && transparency["value"] != null) {
+              globalIntensity *= transparency["value"];
+            }
+            var filterColor = technique.parameters["filterColor"];
+            if(filterColor != null && filterColor["value"] != null) {
+              globalIntensity *= filterColor["value"][3];
+            }
+            if(globalIntensity < 0.00001)
+              return;
+            if(globalIntensity < 1 && blending == 0) {
+              setState(gl.BLEND, true);
+              ctx.blendEquation(gl.FUNC_ADD);
+              ctx.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+            }
+            
             ctx.useProgram(program.program);
             
             var currentTexture = 0;
@@ -122,23 +165,24 @@ class Renderer {
             
             ctx.bindBuffer(primitive.indices.bufferView.target, primitive.indices.buffer);
             ctx.drawElements(primitive.primitive, primitive.indices.count, primitive.indices.type, 0);
+            
+            if(globalIntensity < 1 && blending == 0) {
+              setState(gl.BLEND, false);
+            }
           }
-          
-//          primitive.shader.bind(this, camera, primitive, node.matrixWorld);
-//          ctx.bindBuffer(primitive.indices.bufferView.target, primitive.indices.buffer);
-//          ctx.drawElements(primitive.primitive, primitive.indices.count, primitive.indices.type, 0);
-          
         } else {
           primitive.setupBuffer(ctx);
-          if(primitive.ready) {
-//            var shader = new ProgramShader();
-//            shader.init(ctx);
-//            primitive.shader = shader;
-          }
         }
       });
     });
     node.children.forEach((n) => _renderNode(scene, n));
+  }
+  
+  setState(int cap, bool enable) {
+    if(enable) 
+      ctx.enable(cap);
+    else
+      ctx.disable(cap);
   }
 }
 

@@ -132,7 +132,7 @@ class Loader {
         pass.details = v["details"];
         pass.program = _resources[v["instanceProgram"]["program"]];
         pass.instanceProgram = v["instanceProgram"];
-        pass.states = v["state"];
+        pass.states = v["states"];
         technique.passes[k] = pass;
       });
       _resources[k] = technique;
