@@ -41,6 +41,8 @@ class Renderer {
           program.setup(ctx);
           
           if(program.ready) {
+            ctx.useProgram(program.program);
+            
             var currentTexture = 0;
             var newMaxEnabledArray = -1;
             // bind uniforms
@@ -54,7 +56,7 @@ class Renderer {
                   if(semantic == "PROJECTION") {
                     value = camera.projectionMatrix;
                   } else if (semantic == "MODELVIEW") {
-                    value = node.matrixWorld;
+                    value = camera.matrixWorld * node.matrixWorld;
                   } else if (semantic == "MODELVIEWINVERSETRANSPOSE") {
                     value = mat4ToInverseMat3(camera.matrixWorld * node.matrixWorld);
                     value.transpose();
