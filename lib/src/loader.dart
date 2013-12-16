@@ -252,10 +252,10 @@ class Loader {
             //TODO : light
           } else if(node is Node) {
             _scene.nodes.add(node);
-            _buildNodeHirerachy(node);
           }
         }
       });
+      _scene.nodes.forEach((node) => _buildNodeHirerachy(node));
       return true;
     }else{
       return false;
@@ -277,10 +277,12 @@ class Loader {
   _buildNodeHirerachy(Node node) {
     if(node.children == null)
       node.children = new List();
-    node.childNames.forEach((child){
-      _resources[child].parent = node;
-      node.children.add(_resources[child]);
-      _buildNodeHirerachy(_resources[child]);
+    node.childNames.forEach((name){
+//      _resources[child].parent = node;
+//      node.children.add(_resources[child]);
+      var child = _resources[name];
+      node.add(child);
+      _buildNodeHirerachy(child);
     });
   }
 }

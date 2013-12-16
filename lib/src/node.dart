@@ -25,6 +25,19 @@ class Node {
     rotation = new Quaternion.identity();
   }
   
+  add(Node child) {
+    child.removeFromParent();
+    child.parent = this;
+    children.add(child);
+  }
+  
+  removeFromParent() {
+    if(parent != null) {
+      parent.children.remove(this);
+      parent = null;
+    }
+  }
+  
   applyMatrix(Matrix4 m) {
     position = m.getTranslation();
     scale = _getScaleFromMatrix(m);
@@ -32,10 +45,11 @@ class Node {
   }
   
   _getScaleFromMatrix(Matrix4 m) {
-    var sx = m.getColumn(0).length;
-    var sy = m.getColumn(1).length;
-    var sz = m.getColumn(2).length;
-    return new Vector3(sx, sy, sz);    
+    var vec = new Vector3.zero();
+    var sx = vec.setValues(m[0], m[4], m[8]).length;
+    var sy = vec.setValues(m[1], m[5], m[9]).length;
+    var sz = vec.setValues(m[2], m[6], m[10]).length;
+    return vec.setValues(sx, sy, sz);
   }
   
   updateMatrixLocal() {
