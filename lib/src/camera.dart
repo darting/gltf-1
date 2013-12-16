@@ -1,13 +1,5 @@
 part of orange;
 
-final Vector3 WORLD_UP = new Vector3(0.0, 1.0, 0.0);
-final Vector3 WORLD_LEFT = new Vector3(-1.0, 0.0, 0.0);
-final Vector3 WORLD_RIGHT = new Vector3(1.0, 0.0, 0.0);
-final Vector3 WORLD_DOWN = new Vector3(0.0, -1.0, 0.0);
-
-final Vector3 UNIT_X = new Vector3(1.0, 0.0, 0.0);
-final Vector3 UNIT_Y = new Vector3(0.0, 1.0, 0.0);
-final Vector3 UNIT_Z = new Vector3(0.0, 0.0, 1.0);
 
 abstract class Camera extends Node {
   double near;

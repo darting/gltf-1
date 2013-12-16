@@ -7,7 +7,15 @@ class Scene {
   
   Camera camera;
   
+  enter() {
+    
+  }
+  
   update(num elapsed) {
+    
+  }
+  
+  exit() {
     
   }
 }

@@ -9,7 +9,7 @@ void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
   url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
-  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+//  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
@@ -17,9 +17,8 @@ void main() {
   camera.position.x = 10.0;
   camera.position.y = 700.0;
   camera.position.z = 1500.0;
-  camera.updateMatrixWorld();
+//  camera.updateMatrixWorld();
 //  camera.lookAt(new Vector3.zero());
-  
   
   var loader = new Loader(url);
   loader.start().then((scene) {
@@ -33,9 +32,18 @@ void main() {
       s.camera.aspect = canvas.width / canvas.height;
       s.camera.updateProjection();
     }
+    
     director.replace(s);
     director.startup();
   });
+  
+//  html.document.onMouseMove.listen((html.MouseEvent e) {
+//    Node node = director.scene.nodes.first;
+//    var movement = e.movement;
+//    var xa = node.rotation.radians + movement.x / 100.0;
+//    node.rotation.setAxisAngle(WORLD_UP, xa);
+//    node.rotation.setAxisAngle(WORLD_LEFT, node.rotation.radians + movement.y / 100.0);
+//  });
   
   
 //  var scene = new Scene();
@@ -60,9 +68,13 @@ void main() {
 
 class TestScene extends Scene {
   
-  update(num elapsed) {
+  enter() {
+    
+  }
+  
+  update(num interval) {
     nodes.forEach((e) {
-      e.rotation.setAxisAngle(WORLD_UP, -elapsed * PI / 5000);
+//      e.rotation.setAxisAngle(WORLD_UP, -Director.shared.elapsed * PI / 5000);
     });
   }
   
