@@ -7,7 +7,6 @@ class Node {
   List<String> childNames;
   Matrix4 matrix;
   List<Mesh> meshes;
-  Camera camera;
   
   Node parent;
   Vector3 position;

@@ -178,9 +178,9 @@ class Loader {
         primitive.indices = _resources[p["indices"]];
         primitive.primitive = p["primitive"];
         primitive.material = _resources[p["material"]];
-        primitive.semantics = new Map();
+        primitive.attributes = new Map();
         p["attributes"].forEach((ak, av){
-          primitive.semantics[ak] = _resources[av];
+          primitive.attributes[ak] = _resources[av];
         });
         return primitive;
       }, growable: false);
