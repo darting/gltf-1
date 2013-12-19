@@ -178,9 +178,9 @@ class Loader {
         primitive.indices = _resources[p["indices"]];
         primitive.primitive = p["primitive"];
         primitive.material = _resources[p["material"]];
-        primitive.semantics = new Map();
+        primitive.attributes = new Map();
         p["attributes"].forEach((ak, av){
-          primitive.semantics[ak] = _resources[av];
+          primitive.attributes[ak] = _resources[av];
         });
         return primitive;
       }, growable: false);
@@ -252,10 +252,10 @@ class Loader {
             //TODO : light
           } else if(node is Node) {
             _scene.nodes.add(node);
-            _buildNodeHirerachy(node);
           }
         }
       });
+      _scene.nodes.forEach((node) => _buildNodeHirerachy(node));
       return true;
     }else{
       return false;
@@ -269,11 +269,10 @@ class Loader {
   _buildNodeHirerachy(Node node) {
     if(node.children == null)
       node.children = new List();
-    node.childNames.forEach((child){
-      _resources[child].parent = node;
-      node.children.add(_resources[child]);
-      
-      _buildNodeHirerachy(_resources[child]);
+    node.childNames.forEach((name){
+      var child = _resources[name];
+      node.add(child);
+      _buildNodeHirerachy(child);
     });
   }
 

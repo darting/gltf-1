@@ -23,6 +23,7 @@ class Renderer {
   render(Scene scene) {
     ctx.viewport(0, 0, _canvas.width, _canvas.height);
     ctx.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    scene.camera.updateMatrixWorld();
     scene.nodes.forEach((node) {
       node.updateMatrixWorld();
       _renderNode(scene, node);
@@ -50,10 +51,14 @@ class Renderer {
             var sfactor = gl.SRC_ALPHA;
             var dfactor = gl.ONE_MINUS_SRC_ALPHA;
             if(pass.states != null) {
-              blending = pass.states["blendEnable"];
-              depthTest = pass.states["depthTestEnable"];
-              depthMask = pass.states["depthMask"];
-              cullFaceEnable = pass.states["cullFaceEnable"];
+              if(pass.states["blendEnable"] != null)
+                blending = pass.states["blendEnable"];
+              if(pass.states["depthTestEnable"] != null)
+                depthTest = pass.states["depthTestEnable"];
+              if(pass.states["depthMask"] != null)
+                depthMask = pass.states["depthMask"];
+              if(pass.states["cullFaceEnable"] != null)
+                cullFaceEnable = pass.states["cullFaceEnable"];
               if(pass.states["blendEquation"] != null) {
                 var blendFunc = pass.states["blendFunc"];
                 if(blendFunc != null) {
@@ -144,7 +149,7 @@ class Renderer {
               var parameter = technique.parameters[attributes[symbol]];
               var semantic = parameter["semantic"];
               
-              var accessor = primitive.semantics[semantic];
+              var accessor = primitive.attributes[semantic];
               
               ctx.bindBuffer(accessor.bufferView.target, accessor.buffer);
               var location = program.symbolToLocation[symbol];
