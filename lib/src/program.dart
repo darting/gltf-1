@@ -19,12 +19,12 @@ class Program {
     symbolToLocation = new Map();
   }
   
-  setup(gl.RenderingContext ctx) {
+  build(gl.RenderingContext ctx) {
     if(vertexShader.ready && vertex == null) {
       vertex = ctx.createShader(gl.VERTEX_SHADER);
       ctx.shaderSource(vertex, vertexShader.source);
       ctx.compileShader(vertex);
-    } else {
+    } else if(vertex == null){
       vertexShader.load();
     }
     
@@ -32,7 +32,7 @@ class Program {
       fragment = ctx.createShader(gl.FRAGMENT_SHADER);
       ctx.shaderSource(fragment, fragmentShader.source);
       ctx.compileShader(fragment);
-    } else {
+    } else if(fragment == null){
       fragmentShader.load();
     }
     

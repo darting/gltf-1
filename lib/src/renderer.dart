@@ -36,10 +36,11 @@ class Renderer {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
           var material = primitive.material;
+          material = DebugMaterial;
           var technique = material.technique;
           var pass = technique.passes[material.technique.pass];
           var program = pass.program;
-          program.setup(ctx);
+          program.build(ctx);
           
           if(program.ready) {
             ctx.useProgram(program.program);
@@ -67,7 +68,11 @@ class Renderer {
                 }
               }
             }
+            setState(gl.DEPTH_TEST, depthTest != 0);
             setState(gl.CULL_FACE, cullFaceEnable != 0);
+            ctx.enable(gl.SAMPLE_ALPHA_TO_COVERAGE);
+            ctx.depthMask(depthMask == 1);
+            
             setState(gl.BLEND, blending != 0);
             if(blending > 0) {
               ctx.blendEquation(blendEquation);

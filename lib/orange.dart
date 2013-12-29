@@ -40,6 +40,7 @@ part 'src/only_once.dart';
 part 'src/resources.dart';
 part 'src/light.dart';
 part 'src/trackball_controls.dart';
+part 'src/debug.dart';
 
 part 'src/event/eventdispatcher.dart';
 part 'src/event/events.dart';

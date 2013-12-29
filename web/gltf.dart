@@ -1,15 +1,13 @@
 import 'dart:html' as html;
 import 'package:gltf/orange.dart';
-import 'package:vector_math/vector_math.dart';
 import 'dart:typed_data';
 import 'dart:web_gl' as gl;
-import 'dart:math';
 
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
   url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
-  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+//  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
