@@ -10,7 +10,7 @@ class Node {
   
   Node parent;
   Vector3 position;
-  Vector3 scale;
+  Vector3 _scale;
   Quaternion rotation;
   Matrix4 matrixWorld;
   
@@ -20,7 +20,7 @@ class Node {
     matrixWorld = new Matrix4.identity();
     meshes = new List();
     position = new Vector3.zero();
-    scale = new Vector3(1.0, 1.0, 1.0);
+    _scale = new Vector3(1.0, 1.0, 1.0);
     rotation = new Quaternion.identity();
   }
   
@@ -37,24 +37,49 @@ class Node {
     }
   }
   
-  applyMatrix(Matrix4 m) {
-    position = m.getTranslation();
-    scale = _getScaleFromMatrix(m);
-    rotation = new Quaternion.fromRotation(m.getRotation());
+  translate(Vector3 translation) {
+    matrix.transform3(translation);
   }
   
-  _getScaleFromMatrix(Matrix4 m) {
-    var vec = new Vector3.zero();
-    var sx = vec.setValues(m[0], m[4], m[8]).length;
-    var sy = vec.setValues(m[1], m[5], m[9]).length;
-    var sz = vec.setValues(m[2], m[6], m[10]).length;
-    return vec.setValues(sx, sy, sz);
+  scale(dynamic x, [double y = null, double z = null]) {
+    matrix.scale(x, y, z);
+  }
+  
+  rotate(Vector3 axis, double angle) {
+    matrix.rotate(axis, angle);
+  }
+  
+  applyMatrix(Matrix4 m) {
+    matrix.multiply(m);
+//    position = matrix.getTranslation();
+//    scale = _getScaleFromMatrix(matrix);
+//    
+//    var v1 = new Vector3.zero();
+//    var scaleX = 1.0 / v1.setValues(matrix[0], matrix[1], matrix[2]).length;
+//    var scaleY = 1.0 / v1.setValues(matrix[4], matrix[5], matrix[6]).length;
+//    var scaleZ = 1.0 / v1.setValues(matrix[8], matrix[9], matrix[10]).length;
+//    
+//    Matrix3 r = new Matrix3.zero();
+//    r.storage[0] = matrix[0] * scaleX;
+//    r.storage[1] = matrix[1] * scaleX;
+//    r.storage[2] = matrix[2] * scaleX;
+//    
+//    r.storage[3] = matrix[4] * scaleY;
+//    r.storage[4] = matrix[5] * scaleY;
+//    r.storage[5] = matrix[6] * scaleY;
+//    
+//    r.storage[6] = matrix[8] * scaleZ;
+//    r.storage[7] = matrix[9] * scaleZ;
+//    r.storage[8] = matrix[10] * scaleZ;
+//    
+//    rotation = new Quaternion.fromRotation(r);
   }
   
   updateMatrixLocal() {
-    matrix.setFromTranslationRotation(position, rotation);
-    if(scale.x != 1 || scale.y != 1 || scale.z != 1)
-      matrix.scale(scale);
+//    matrix.setFromTranslationRotation(position, rotation);
+//    if(scale.x != 1 || scale.y != 1 || scale.z != 1) {
+//      matrix.scale(scale);
+//    }
   }
   
   updateMatrixWorld() {

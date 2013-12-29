@@ -85,7 +85,7 @@ Matrix3 mat4ToInverseMat3(Matrix4 mat) {
 
 
 
-_newMatrix4FromArray(List arr) {
+Matrix4 _newMatrix4FromArray(List arr) {
   return new Matrix4(
       arr[0].toDouble(), arr[1].toDouble(), arr[2].toDouble(), arr[3].toDouble(),
       arr[4].toDouble(), arr[5].toDouble(), arr[6].toDouble(), arr[7].toDouble(),
@@ -93,6 +93,13 @@ _newMatrix4FromArray(List arr) {
       arr[12].toDouble(), arr[13].toDouble(), arr[14].toDouble(), arr[15].toDouble());
 }
 
+Vector3 _getScaleFromMatrix(Matrix4 m) {
+  var vec = new Vector3.zero();
+  var sx = vec.setValues(m[0], m[1], m[2]).length;
+  var sy = vec.setValues(m[4], m[5], m[6]).length;
+  var sz = vec.setValues(m[8], m[9], m[10]).length;
+  return vec.setValues(sx, sy, sz);
+}
 
 
 

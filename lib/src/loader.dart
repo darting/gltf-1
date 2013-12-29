@@ -129,6 +129,7 @@ class Loader {
       technique.passes = new Map();
       v["passes"].forEach((k, v){
         var pass = new Pass();
+        pass.name = k;
         pass.details = v["details"];
         pass.program = _resources[v["instanceProgram"]["program"]];
         pass.instanceProgram = v["instanceProgram"];

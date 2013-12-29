@@ -2,19 +2,24 @@ import 'dart:html' as html;
 import 'package:gltf/orange.dart';
 import 'dart:typed_data';
 import 'dart:web_gl' as gl;
+import 'dart:math';
+import 'package:vector_math/vector_math.dart';
 
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
-  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
+//  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
 //  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
   var camera = new PerspectiveCamera(canvas.width / canvas.height);
-  camera.position.x = 10.0;
-  camera.position.y = 700.0;
-  camera.position.z = 1500.0;
+//  camera.position.x = 10.0;
+//  camera.position.y = 700.0;
+//  camera.position.z = 1500.0;
+  
+  camera.translate(new Vector3(10.0, 700.0, 1500.0));
+  
 //  camera.updateMatrixWorld();
 //  camera.lookAt(new Vector3.zero());
   
@@ -72,6 +77,7 @@ class TestScene extends Scene {
   update(num interval) {
     nodes.forEach((e) {
 //      e.rotation.setAxisAngle(WORLD_UP, -Director.shared.elapsed * PI / 5000);
+//      e.rotate(WORLD_UP, interval * PI / 5000);
     });
   }
   
