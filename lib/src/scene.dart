@@ -6,6 +6,7 @@ class Scene {
   List<Node> nodes;
   
   Camera camera;
+  Color backgroundColor = new Color.fromHex(0x84A6EE);
   
   enter() {
     

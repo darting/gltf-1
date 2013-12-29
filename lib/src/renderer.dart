@@ -17,12 +17,10 @@ class Renderer {
   prepare() {
     ctx.viewport(0, 0, _canvas.width, _canvas.height);
     ctx.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    ctx.clearColor(0.40784313725490196, 0.6431372549019608, 0.9607843137254902, 1.0);
   }
   
   render(Scene scene) {
-    ctx.viewport(0, 0, _canvas.width, _canvas.height);
-    ctx.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    ctx.clearColor(scene.backgroundColor.red, scene.backgroundColor.green, scene.backgroundColor.blue, scene.backgroundColor.alpha);
     scene.camera.updateMatrixWorld();
     scene.nodes.forEach((node) {
       node.updateMatrixWorld();
@@ -36,7 +34,7 @@ class Renderer {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
           var material = primitive.material;
-          material = DebugMaterial;
+//          material = DebugMaterial;
           var technique = material.technique;
           var pass = technique.passes[material.technique.pass];
           var program = pass.program;

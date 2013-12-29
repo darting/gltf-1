@@ -26,10 +26,9 @@ void main() {
     s.nodes = scene.nodes;
     if(s.camera == null) 
       s.camera = camera;
-    else {
-      s.camera.aspect = canvas.width / canvas.height;
-      s.camera.updateProjection();
-    }
+    
+    s.camera.aspect = canvas.width / canvas.height;
+    s.camera.updateProjection();
     
     director.replace(s);
     director.startup();
