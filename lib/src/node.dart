@@ -51,6 +51,7 @@ class Node {
   
   applyMatrix(Matrix4 m) {
     matrix.multiply(m);
+    decomposeMatrix(m, _scale, rotation, position);
 //    position = matrix.getTranslation();
 //    scale = _getScaleFromMatrix(matrix);
 //    
@@ -76,10 +77,10 @@ class Node {
   }
   
   updateMatrixLocal() {
-//    matrix.setFromTranslationRotation(position, rotation);
-//    if(scale.x != 1 || scale.y != 1 || scale.z != 1) {
-//      matrix.scale(scale);
-//    }
+    matrix.setFromTranslationRotation(position, rotation);
+    if(_scale.x != 1 || _scale.y != 1 || _scale.z != 1) {
+      matrix.scale(_scale);
+    }
   }
   
   updateMatrixWorld() {
