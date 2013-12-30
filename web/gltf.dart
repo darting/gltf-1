@@ -8,7 +8,7 @@ import 'package:vector_math/vector_math.dart';
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
-//  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
+  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
 //  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
