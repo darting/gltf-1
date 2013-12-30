@@ -8,30 +8,35 @@ abstract class Camera extends Node {
   double aspect;
   Matrix4 projectionMatrix;
   Vector3 _focusPosition;
+  Quaternion _rotation;
+  
   updateProjection();
 
   lookAt(Vector3 target) {
     _focusPosition = target.clone();
-    rotation = new Quaternion.fromRotation(makeViewMatrix(position, _focusPosition, WORLD_UP).getRotation());
+    var rotation = new Quaternion.fromRotation(makeViewMatrix(position, _focusPosition, WORLD_UP).getRotation());
     rotation.inverse();
+    var s = _getScaleFromMatrix(matrix);
+    matrix.setFromTranslationRotation(position, rotation);
+    matrix.scale(s);
   }
-
-  rotate(Vector3 axis, double angleInRadian) {
-    rotation *= new Quaternion.axisAngle(axis, angleInRadian);
-  }
-  
-  roll(double angleInRadian) {
-    rotate(rotation.rotated(UNIT_Z), angleInRadian);
-  }
-  
-  yaw(double angleInRadian) {
-    rotate(rotation.rotated(UNIT_Y), angleInRadian);
-  }
-  
-  pitch(double angleInRadian) {
-    rotate(rotation.rotated(UNIT_X), angleInRadian);
-  }
-  
+//
+//  rotate(Vector3 axis, double angleInRadian) {
+//    rotation *= new Quaternion.axisAngle(axis, angleInRadian);
+//  }
+//  
+//  roll(double angleInRadian) {
+//    rotate(rotation.rotated(UNIT_Z), angleInRadian);
+//  }
+//  
+//  yaw(double angleInRadian) {
+//    rotate(rotation.rotated(UNIT_Y), angleInRadian);
+//  }
+//  
+//  pitch(double angleInRadian) {
+//    rotate(rotation.rotated(UNIT_X), angleInRadian);
+//  }
+//  
   Vector3 get frontDirection =>  (_focusPosition - position).normalize();
 }
 
