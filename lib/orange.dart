@@ -44,6 +44,10 @@ part 'src/debug.dart';
 part 'src/color.dart';
 part 'src/matrix_helper.dart';
 
+part 'src/math/matrix4.dart';
+part 'src/math/vector3.dart';
+part 'src/math/quaternion.dart';
+
 part 'src/event/eventdispatcher.dart';
 part 'src/event/events.dart';
 part 'src/event/eventsubscription.dart';
