@@ -32,15 +32,15 @@ class Node {
   }
   
   translate(Vector3 translation) {
-    matrix.transform3(translation);
+    matrix.translate(translation);
   }
   
   scale(dynamic x, [double y = null, double z = null]) {
     matrix.scale(x, y, z);
   }
   
-  rotate(Vector3 axis, double angle) {
-    matrix.rotate(axis, angle);
+  rotate(double angle, Vector3 axis) {
+    matrix.rotate(angle, axis);
   }
   
   applyMatrix(Matrix4 m) {

@@ -3,10 +3,10 @@ part of orange;
 
 class TrackballControls {
   
-  Vector2 _lastPosition;
+//  Vector2 _lastPosition;
   
   TrackballControls() {
-    _lastPosition = new Vector2.zero();
+//    _lastPosition = new Vector2.zero();
   }
   
   

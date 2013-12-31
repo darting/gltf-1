@@ -13,12 +13,13 @@ abstract class Camera extends Node {
   updateProjection();
 
   lookAt(Vector3 target) {
-    _focusPosition = target.clone();
-    var rotation = new Quaternion.fromRotation(makeViewMatrix(position, _focusPosition, WORLD_UP).getRotation());
-    rotation.inverse();
-    var s = _getScaleFromMatrix(matrix);
-    matrix.setFromTranslationRotation(position, rotation);
-    matrix.scale(s);
+//    _focusPosition = target.clone();
+//    var rotation = new Quaternion.fromRotation(makeViewMatrix(position, _focusPosition, WORLD_UP).getRotation());
+//    rotation.inverse();
+//    var s = _getScaleFromMatrix(matrix);
+//    matrix.fromRotationTranslation(rotation, position);
+//    matrix.scale(s);
+//    matrix.lookAt(eye, center, up);
   }
 //
 //  rotate(Vector3 axis, double angleInRadian) {
@@ -37,7 +38,7 @@ abstract class Camera extends Node {
 //    rotate(rotation.rotated(UNIT_X), angleInRadian);
 //  }
 //  
-  Vector3 get frontDirection =>  (_focusPosition - position).normalize();
+//  Vector3 get frontDirection =>  (_focusPosition - position).normalize();
 }
 
 class PerspectiveCamera extends Camera {
@@ -52,7 +53,7 @@ class PerspectiveCamera extends Camera {
   }
   
   updateProjection() {
-    projectionMatrix = makePerspectiveMatrix(radians(fov), aspect, near, far);
+    projectionMatrix = new Matrix4.perspective(radians(fov), aspect, near, far);
   }
   
   updateMatrixWorld() {
