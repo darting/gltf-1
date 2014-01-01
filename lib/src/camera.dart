@@ -49,7 +49,6 @@ class PerspectiveCamera extends Camera {
     this.near = near;
     this.far = far;
     this.fov = fov;
-    lookAt(new Vector3(0.0, 0.0, -1.0));
     updateProjection();
   }
   

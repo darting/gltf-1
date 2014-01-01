@@ -9,7 +9,7 @@ void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
   url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
-//  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
@@ -18,8 +18,8 @@ void main() {
 //  camera.position.y = 700.0;
 //  camera.position.z = 1500.0;
   
-  camera.translate(new Vector3(10.0, 700.0, 1500.0));
-  camera.lookAt(new Vector3(0.0, 0.0, -1.0));
+  camera.translate(new Vector3(0.0, 100.0, 500.0));
+//  camera.lookAt(new Vector3(0.0, 0.0, -1.0));
   
 //  camera.updateMatrixWorld();
 //  camera.lookAt(new Vector3.zero());
@@ -36,7 +36,7 @@ void main() {
     s.camera.aspect = canvas.width / canvas.height;
     s.camera.updateProjection();
     
-    s.camera.lookAt(new Vector3(0.0, 0.0, -1.0));
+//    s.camera.lookAt(new Vector3(0.0, 0.0, -1.0));
     
     director.replace(s);
     director.startup();

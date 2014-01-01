@@ -740,6 +740,7 @@ class Matrix4 {
     } else {
       zs = 1.0;
     }
+    xs=ys=zs=1.0;
     
     scaling[0] = xs * math.sqrt(storage[0] * storage[0] + storage[1] * storage[1] + storage[2] * storage[2]);
     scaling[1] = ys * math.sqrt(storage[4] * storage[4] + storage[5] * storage[5] + storage[6] * storage[6]);
