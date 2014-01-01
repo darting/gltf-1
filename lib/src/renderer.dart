@@ -108,8 +108,7 @@ class Renderer {
                   } else if (semantic == "MODELVIEW") {
                     value = camera.matrixWorld * node.matrixWorld;
                   } else if (semantic == "MODELVIEWINVERSETRANSPOSE") {
-                    value = mat4ToInverseMat3(camera.matrixWorld * node.matrixWorld);
-                    value.transpose();
+                    value = (camera.matrixWorld * node.matrixWorld).normalMatrix3();
                   }
                 }
               }

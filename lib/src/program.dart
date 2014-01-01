@@ -114,13 +114,13 @@ class Program {
   }
   
   _mat3f(Matrix3 mat) {
-    var tmp = new Float32List.fromList(new List.filled(9, 0.0));
+    var tmp = new Float32List(9);
     mat.copyIntoArray(tmp);
     return tmp;
   }
   
   _mat4f(Matrix4 mat) {
-    var tmp = new Float32List.fromList(new List.filled(16, 0.0));
+    var tmp = new Float32List(16);
     mat.copyIntoArray(tmp);
     return tmp;
   }

@@ -12,40 +12,68 @@ class Quaternion {
   }
   
   Quaternion.identity() {
-    storage[3] = 1.0;
+    setIdentity();
   }
   
-  Quaternion.fromRotation(Matrix3 m) {
-    // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
-    // article "Quaternion Calculus and Fast Animation".
-    var fTrace = m[0] + m[4] + m[8];
-    var fRoot;
+  Quaternion setFromRotation(Matrix4 m) {
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+    // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+    var te = m.storage,
 
-    if ( fTrace > 0.0 ) {
-        // |w| > 1/2, may as well choose w > 1/2
-        fRoot = math.sqrt(fTrace + 1.0);  // 2w
-        storage[3] = 0.5 * fRoot;
-        fRoot = 0.5/fRoot;  // 1/(4w)
-        storage[0] = (m[7]-m[5])*fRoot;
-        storage[1] = (m[2]-m[6])*fRoot;
-        storage[2] = (m[3]-m[1])*fRoot;
+      m11 = te[0], m12 = te[4], m13 = te[8],
+      m21 = te[1], m22 = te[5], m23 = te[9],
+      m31 = te[2], m32 = te[6], m33 = te[10],
+
+      trace = m11 + m22 + m33,
+      s;
+
+    if ( trace > 0 ) {
+
+      s = 0.5 / math.sqrt( trace + 1.0 );
+
+      this[3] = 0.25 / s;
+      this[0] = ( m32 - m23 ) * s;
+      this[1] = ( m13 - m31 ) * s;
+      this[2] = ( m21 - m12 ) * s;
+
+    } else if ( m11 > m22 && m11 > m33 ) {
+
+      s = 2.0 * math.sqrt( 1.0 + m11 - m22 - m33 );
+
+      this[3] = (m32 - m23 ) / s;
+      this[0] = 0.25 * s;
+      this[1] = (m12 + m21 ) / s;
+      this[2] = (m13 + m31 ) / s;
+
+    } else if ( m22 > m33 ) {
+
+      s = 2.0 * math.sqrt( 1.0 + m22 - m11 - m33 );
+
+      this[3] = (m13 - m31 ) / s;
+      this[0] = (m12 + m21 ) / s;
+      this[1] = 0.25 * s;
+      this[2] = (m23 + m32 ) / s;
+
     } else {
-        // |w| <= 1/2
-        var i = 0;
-        if ( m[4] > m[0] )
-          i = 1;
-        if ( m[8] > m[i*3+i] )
-          i = 2;
-        var j = (i+1)%3;
-        var k = (i+2)%3;
 
-        fRoot = math.sqrt(m[i*3+i]-m[j*3+j]-m[k*3+k] + 1.0);
-        storage[i] = 0.5 * fRoot;
-        fRoot = 0.5 / fRoot;
-        storage[3] = (m[k*3+j] - m[j*3+k]) * fRoot;
-        storage[j] = (m[j*3+i] + m[i*3+j]) * fRoot;
-        storage[k] = (m[k*3+i] + m[i*3+k]) * fRoot;
+      s = 2.0 * math.sqrt( 1.0 + m33 - m11 - m22 );
+
+      this[3] = ( m21 - m12 ) / s;
+      this[0] = ( m13 + m31 ) / s;
+      this[1] = ( m23 + m32 ) / s;
+      this[2] = 0.25 * s;
+
     }
+
+
+    return this;
+  }
+  
+  Quaternion setIdentity() {
+    storage[0] = 0.0;
+    storage[1] = 0.0;
+    storage[2] = 0.0;
+    storage[3] = 1.0;
   }
   
   Quaternion inverse() {

@@ -3,13 +3,13 @@ import 'package:gltf/orange.dart';
 import 'dart:typed_data';
 import 'dart:web_gl' as gl;
 import 'dart:math';
-import 'package:vector_math/vector_math.dart';
+//import 'package:vector_math/vector_math.dart';
 
 void main() {
   
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
-//  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
-  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+  url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
+//  url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
@@ -67,6 +67,26 @@ void main() {
 //  director.replace(scene);
 //  director.startup();
   
+  var m = new Matrix4(2.046, 0.0, 0.0, 0.0,
+      0.0, 0.481403, -1.79662, 0.0,
+      0.0, 1.79662, 0.481403, 0.0,
+      7.91714, 0.129603, 4.55682, 1.0
+      );
+  var t = new Vector3.zero();
+  var r = new Quaternion.identity();
+  var s = new Vector3.zero();
+  
+  m.decompose(t, r, s);
+//  print(t);
+//  print(r);
+//  print(s);
+  
+  var m2 = new Matrix4.identity();
+  m2.fromRotationTranslation(r, t);
+  m2.scale(s);
+  
+//  print(m);
+//  print(m2);
 }
 
 

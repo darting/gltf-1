@@ -276,6 +276,14 @@ class Loader {
       _buildNodeHirerachy(child);
     });
   }
+  
+  Matrix4 _newMatrix4FromArray(List arr) {
+    return new Matrix4(
+        arr[0].toDouble(), arr[1].toDouble(), arr[2].toDouble(), arr[3].toDouble(),
+        arr[4].toDouble(), arr[5].toDouble(), arr[6].toDouble(), arr[7].toDouble(),
+        arr[8].toDouble(), arr[9].toDouble(), arr[10].toDouble(), arr[11].toDouble(),
+        arr[12].toDouble(), arr[13].toDouble(), arr[14].toDouble(), arr[15].toDouble());
+  }
 
 }
 

@@ -25,6 +25,10 @@ class Vector3 {
     return vec;
   }
   
+  double get x => storage[0];
+  double get y => storage[1];
+  double get z => storage[2];
+  
   double get length {
     var x = storage[0],
         y = storage[1],
@@ -42,5 +46,9 @@ class Vector3 {
   double operator[](int i) => storage[i];
   void operator[]=(int i, double v) {
     storage[i] = v;
+  }
+  
+  toString() {
+    return "vec3($x, $y, $z)";
   }
 }

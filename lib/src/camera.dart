@@ -20,6 +20,7 @@ abstract class Camera extends Node {
 //    matrix.fromRotationTranslation(rotation, position);
 //    matrix.scale(s);
 //    matrix.lookAt(eye, center, up);
+    _matrix.lookAt(translation, target, WORLD_UP);
   }
 //
 //  rotate(Vector3 axis, double angleInRadian) {

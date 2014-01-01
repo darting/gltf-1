@@ -5,8 +5,23 @@ part of orange;
 const double GLMAT_EPSILON = 0.000001;
 
 
+
 class Matrix4 {
   final Float32List storage = new Float32List(16);
+  
+  ///
+  /// [1, 0, 0, 0,
+  ///  0, 1, 0, 0,
+  ///  0, 0, 1, 0,
+  ///  x, y, z, 0]
+  ///
+  Matrix4(double arg0, double arg1, double arg2, double arg3,
+          double arg4, double arg5, double arg6, double arg7,
+          double arg8, double arg9, double arg10, double arg11,
+          double arg12, double arg13, double arg14, double arg15) {
+    setValues(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+              arg11, arg12, arg13, arg14, arg15);
+  }
   
   Matrix4.zero();
   
@@ -77,6 +92,30 @@ class Matrix4 {
     storage[13] = 0.0;
     storage[14] = (far * near * 2) * nf;
     storage[15] = 0.0;
+  }
+  
+  Matrix4 setValues(double arg0, double arg1, double arg2,
+                    double arg3, double arg4, double arg5,
+                    double arg6, double arg7, double arg8,
+                    double arg9, double arg10, double arg11,
+                    double arg12, double arg13, double arg14, double arg15) {
+    storage[15] = arg15;
+    storage[14] = arg14;
+    storage[13] = arg13;
+    storage[12] = arg12;
+    storage[11] = arg11;
+    storage[10] = arg10;
+    storage[9] = arg9;
+    storage[8] = arg8;
+    storage[7] = arg7;
+    storage[6] = arg6;
+    storage[5] = arg5;
+    storage[4] = arg4;
+    storage[3] = arg3;
+    storage[2] = arg2;
+    storage[1] = arg1;
+    storage[0] = arg0;
+    return this;
   }
   
   Matrix4 setZero() {
@@ -232,6 +271,12 @@ class Matrix4 {
     storage[15] = 1.0;
   }
   
+  /**
+   * Generates a look-at matrix with the given eye position, focal point, and up axis
+   * @param [Vector3] eye Position of the viewer
+   * @param [Vector3] center Point the viewer is looking at
+   * @param [Vector3] up vec3 pointing up
+   */
   Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up) {
     var x0, x1, x2, y0, y1, y2, z0, z1, z2, len,
     eyex = eye.storage[0],
@@ -263,7 +308,7 @@ class Matrix4 {
     x1 = upz * z0 - upx * z2;
     x2 = upx * z1 - upy * z0;
     len = math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
-    if (!len) {
+    if (len == 0.0) {
         x0 = 0;
         x1 = 0;
         x2 = 0;
@@ -279,7 +324,7 @@ class Matrix4 {
     y2 = z0 * x1 - z1 * x0;
 
     len = math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
-    if (!len) {
+    if (len == 0.0) {
         y0 = 0;
         y1 = 0;
         y2 = 0;
@@ -310,7 +355,7 @@ class Matrix4 {
     return this;
   }
   
-  Matrix4 invert() {
+  double invert() {
     var a00 = storage[0], a01 = storage[1], a02 = storage[2], a03 = storage[3],
         a10 = storage[4], a11 = storage[5], a12 = storage[6], a13 = storage[7],
         a20 = storage[8], a21 = storage[9], a22 = storage[10], a23 = storage[11],
@@ -332,8 +377,8 @@ class Matrix4 {
         // Calculate the determinant
         det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
-    if (!det) {
-        return this; 
+    if (det == 0.0) {
+        return det; 
     }
     det = 1.0 / det;
 
@@ -353,7 +398,7 @@ class Matrix4 {
     storage[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
     storage[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
     storage[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
-    return this;
+    return det;
   }
   
   Matrix4 adjoint() {
@@ -622,6 +667,95 @@ class Matrix4 {
     return new Vector3(x, y, z);
   }
   
+  Vector3 getScale() {
+    var vec = new Vector3.zero();
+    var sx = vec.setValues(storage[0], storage[1], storage[2]).length;
+    var sy = vec.setValues(storage[4], storage[5], storage[6]).length;
+    var sz = vec.setValues(storage[8], storage[9], storage[10]).length;
+    return vec.setValues(sx, sy, sz);
+  }
+  
+  Matrix3 normalMatrix3() {
+    var out = new Matrix3.zero();
+    var a00 = storage[0], a01 = storage[1], a02 = storage[2], a03 = storage[3],
+        a10 = storage[4], a11 = storage[5], a12 = storage[6], a13 = storage[7],
+        a20 = storage[8], a21 = storage[9], a22 = storage[10], a23 = storage[11],
+        a30 = storage[12], a31 = storage[13], a32 = storage[14], a33 = storage[15],
+
+        b00 = a00 * a11 - a01 * a10,
+        b01 = a00 * a12 - a02 * a10,
+        b02 = a00 * a13 - a03 * a10,
+        b03 = a01 * a12 - a02 * a11,
+        b04 = a01 * a13 - a03 * a11,
+        b05 = a02 * a13 - a03 * a12,
+        b06 = a20 * a31 - a21 * a30,
+        b07 = a20 * a32 - a22 * a30,
+        b08 = a20 * a33 - a23 * a30,
+        b09 = a21 * a32 - a22 * a31,
+        b10 = a21 * a33 - a23 * a31,
+        b11 = a22 * a33 - a23 * a32,
+
+        // Calculate the determinant
+        det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+
+    if (det == 0.0) { 
+        return null; 
+    }
+    det = 1.0 / det;
+
+    out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+    out[1] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+    out[2] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+
+    out[3] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+    out[4] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+    out[5] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+
+    out[6] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+    out[7] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+    out[8] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+    return out;
+  }
+  
+  decompose(Vector3 translation, Quaternion rotation, Vector3 scaling) {
+    translation[0] = storage[12];
+    translation[1] = storage[13];
+    translation[2] = storage[14];
+    
+    var xs, ys, zs;
+    if((storage[0] * storage[1] * storage[2] * storage[3]) < 0) {
+      xs = -1.0;
+    } else {
+      xs = 1.0;
+    }
+    
+    if((storage[4] * storage[5] * storage[6] * storage[7]) < 0) {
+      ys = -1.0;
+    } else {
+      ys = 1.0;
+    }
+    
+    if((storage[8] * storage[9] * storage[10] * storage[11]) < 0) {
+      zs = -1.0;
+    } else {
+      zs = 1.0;
+    }
+    
+    scaling[0] = xs * math.sqrt(storage[0] * storage[0] + storage[1] * storage[1] + storage[2] * storage[2]);
+    scaling[1] = ys * math.sqrt(storage[4] * storage[4] + storage[5] * storage[5] + storage[6] * storage[6]);
+    scaling[2] = zs * math.sqrt(storage[8] * storage[8] + storage[9] * storage[9] + storage[10] * storage[10]);
+    
+    if(scaling.x == 0.0 || scaling.y == 0.0 || scaling.z == 0.0) {
+      rotation.setIdentity();
+    } else {
+      rotation.setFromRotation(new Matrix4(
+          storage[0] / scaling.x, storage[1] / scaling.x, storage[2] / scaling.x, 0.0,
+          storage[4] / scaling.y, storage[5] / scaling.y, storage[6] / scaling.y, 0.0,
+          storage[8] / scaling.z, storage[9] / scaling.z, storage[10] / scaling.z, 0.0,
+          0.0, 0.0, 0.0, 1.0));      
+    }
+  }
+  
   double operator[](int i) => storage[i];
   void operator[]=(int i, double v) {
     storage[i] = v;
@@ -629,6 +763,26 @@ class Matrix4 {
   
   Matrix4 operator*(Matrix4 mat) {
     return clone().multiply(mat);
+  }
+  
+  void copyIntoArray(List<num> array, [int offset=0]) {
+    int i = offset;
+    array[i+15] = storage[15];
+    array[i+14] = storage[14];
+    array[i+13] = storage[13];
+    array[i+12] = storage[12];
+    array[i+11] = storage[11];
+    array[i+10] = storage[10];
+    array[i+9] = storage[9];
+    array[i+8] = storage[8];
+    array[i+7] = storage[7];
+    array[i+6] = storage[6];
+    array[i+5] = storage[5];
+    array[i+4] = storage[4];
+    array[i+3] = storage[3];
+    array[i+2] = storage[2];
+    array[i+1] = storage[1];
+    array[i+0] = storage[0];
   }
   
   String toString() {

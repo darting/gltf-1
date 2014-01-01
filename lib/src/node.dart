@@ -5,7 +5,7 @@ class Node {
   String name;
   List<Node> children;
   List<String> childNames;
-  Matrix4 matrix;
+  Matrix4 _matrix;
   List<Mesh> meshes;
   
   Node parent;
@@ -13,7 +13,7 @@ class Node {
   
   Node() {
     children = new List();
-    matrix = new Matrix4.identity();
+    _matrix = new Matrix4.identity();
     matrixWorld = new Matrix4.identity();
     meshes = new List();
   }
@@ -32,29 +32,30 @@ class Node {
   }
   
   translate(Vector3 translation) {
-    matrix.translate(translation);
+    _matrix.translate(translation);
   }
   
   scale(dynamic x, [double y = null, double z = null]) {
-    matrix.scale(x, y, z);
+    _matrix.scale(x, y, z);
   }
   
   rotate(double angle, Vector3 axis) {
-    matrix.rotate(angle, axis);
+    _matrix.rotate(angle, axis);
   }
   
   applyMatrix(Matrix4 m) {
-    matrix.multiply(m);
+    _matrix.multiply(m);
   }
   
   updateMatrixWorld() {
     if(parent != null) {
-      matrixWorld = parent.matrixWorld * matrix;
+      matrixWorld = parent.matrixWorld * _matrix;
     } else {
-      matrixWorld = matrix.clone();
+      matrixWorld = _matrix.clone();
     }
     children.forEach((c) => c.updateMatrixWorld());
   }
   
-  Vector3 get position => matrix.getTranslation();
+  Vector3 get translation => _matrix.getTranslation();
+  Vector3 get scaling => _matrix.getScale();
 }
