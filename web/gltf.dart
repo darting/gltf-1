@@ -10,6 +10,7 @@ void main() {
   var url = "http://127.0.0.1:3030/gltf/web/SuperMurdoch/SuperMurdoch.json";
   url = "http://127.0.0.1:3030/gltf/web/wine/wine.json";
   url = "http://127.0.0.1:3030/gltf/web/duck/duck.json";
+  url = "http://127.0.0.1:3030/gltf/web/rambler/rambler.json";
 
   var canvas = html.querySelector("#container");
   var director = new Director(canvas);
