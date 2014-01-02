@@ -44,6 +44,7 @@ part 'src/color.dart';
 part 'src/matrix_helper.dart';
 
 part 'src/materials/color_material.dart';
+part 'src/materials/texture_material.dart';
 
 part 'src/math/matrix4.dart';
 part 'src/math/matrix3.dart';

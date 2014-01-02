@@ -43,6 +43,18 @@ class Node {
     _matrix.rotate(angle, axis);
   }
   
+  rotateX(double rad) {
+    _matrix.rotateX(rad);
+  }
+  
+  rotateY(double rad) {
+    _matrix.rotateY(rad);
+  }
+  
+  rotateZ(double rad) {
+    _matrix.rotateZ(rad);
+  }
+  
   applyMatrix(Matrix4 m) {
     _matrix.multiply(m);
   }

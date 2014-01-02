@@ -20,8 +20,8 @@ void main() {
 //  camera.position.y = 700.0;
 //  camera.position.z = 1500.0;
   
-  camera.translate(new Vector3(0.0, 0.0, 700.0));
-//  camera.lookAt(new Vector3(0.0, 0.0, -1.0));
+  camera.translate(new Vector3(0.0, 0.0, -700.0));
+  camera.lookAt(new Vector3(0.0, 0.0, 1.0));
   
 //  camera.updateMatrixWorld();
 //  camera.lookAt(new Vector3.zero());
@@ -37,6 +37,14 @@ void main() {
     
     s.camera.aspect = canvas.width / canvas.height;
     s.camera.updateProjection();
+    
+    s.nodes.forEach((n) {
+//      n.rotate(90.0, WORLD_LEFT);
+//      n.rotate(90.0, WORLD_RIGHT);
+        n.rotateX(30.0);
+//        n.rotateY(10.0);
+      
+    });
     
 //    s.camera.lookAt(new Vector3(0.0, 0.0, -1.0));
     
@@ -103,7 +111,8 @@ class TestScene extends Scene {
 //    camera.rotate(camera.matrixWorld.up, interval * PI / 10000);
     nodes.forEach((e) {
 //      e.rotation.setAxisAngle(WORLD_UP, -Director.shared.elapsed * PI / 5000);
-      e.rotate(interval * PI / 5000, WORLD_UP);
+//      e.rotate(interval * PI / 5000, WORLD_UP);
+      
     });
   }
   

@@ -1,16 +1,10 @@
 part of orange;
 
 
+Pass passForTextureMaterial = _makePassForTextureMaterial();
+Technique techniqueForTextureMaterial = _makeTechniqueForTextureMaterial(passForTextureMaterial);
 
-class ColorMaterial extends Material {
-  static Pass _pass = _makePassForColorMaterial();
-  
-  ColorMaterial(Color color) {
-    technique = _makeTechniqueForColorMaterial(color, _pass);
-  }
-}
-
-Technique _makeTechniqueForColorMaterial(Color color, Pass pass) {
+Technique _makeTechniqueForTextureMaterial(Pass pass) {
   var technique = new Technique();
   technique.parameters = {
      "modelViewMatrix": {"semantic": "MODELVIEW", "type": 35676},
@@ -18,7 +12,8 @@ Technique _makeTechniqueForColorMaterial(Color color, Pass pass) {
      "position": {"semantic": "POSITION", "type": 35665},
      "normal": {"semantic": "NORMAL", "type": 35665},
      "normalMatrix": {"semantic": "MODELVIEWINVERSETRANSPOSE", "type": 35675},
-     "color": {"value": [color.red, color.green, color.blue], "type": 35665}
+     "texcoord0": {"semantic": "TEXCOORD_0", "type": 35664},
+     "diffuse": {"type": 35678}
   };
   technique.pass = "defaultPass";
   technique.passes = {"defaultPass": pass};
@@ -26,21 +21,22 @@ Technique _makeTechniqueForColorMaterial(Color color, Pass pass) {
 }
 
 
-Pass _makePassForColorMaterial() {
+Pass _makePassForTextureMaterial() {
   var pass = new Pass();
-  pass.program = _makeProgramForColorMaterial();
+  pass.program = _makeProgramForTextureMaterial();
   pass.details = {};
   pass.instanceProgram = {
      "attributes": {
       "a_position": "position",
-      "a_normal": "normal"
+      "a_normal": "normal",
+      "a_texcoord0": "texcoord0"
      },
      "program": "debugProgram",
      "uniforms": {
        "u_modelViewMatrix": "modelViewMatrix",
        "u_projectionMatrix": "projectionMatrix",
        "u_normalMatrix": "normalMatrix",
-       "u_color": "color"
+       "u_texture_sampler": "diffuse"
      }
   };
   pass.states = {
@@ -53,7 +49,7 @@ Pass _makePassForColorMaterial() {
 }
 
 
-Program _makeProgramForColorMaterial() {
+Program _makeProgramForTextureMaterial() {
   var program = new Program();
   program.vertexShader = new Shader();
   program.vertexShader.source = 
@@ -61,11 +57,14 @@ Program _makeProgramForColorMaterial() {
   precision highp float;
   attribute vec3 a_position;
   attribute vec3 a_normal;
+  attribute vec2 a_texcoord0;
   uniform mat4 u_modelViewMatrix;
   uniform mat4 u_projectionMatrix;
   uniform mat3 u_normalMatrix;
   
   varying highp vec3 v_lighting;
+  varying vec2 v_texcoord0;
+
   void main(void) { 
     gl_Position = u_projectionMatrix * u_modelViewMatrix * vec4(a_position,1.0); 
 
@@ -75,6 +74,7 @@ Program _makeProgramForColorMaterial() {
     highp vec3 transformedNormal = u_normalMatrix * a_normal;
     highp float directional = max(dot(transformedNormal, directionalVector), 0.0);
     v_lighting = ambientLight + (directionalLightColor * directional);
+    v_texcoord0 = a_texcoord0;
   }
 """;
   
@@ -83,14 +83,15 @@ Program _makeProgramForColorMaterial() {
 """
   precision highp float;
   uniform vec3 u_color;
+  uniform sampler2D u_texture_sampler;
   varying highp vec3 v_lighting;
+  varying vec2 v_texcoord0;
   void main(void) {
-    gl_FragColor = vec4(u_color * v_lighting, 1.0); 
+    vec4 color = texture2D(u_texture_sampler, v_texcoord0);
+    gl_FragColor = vec4(color.xyz * v_lighting, 1.0); 
   }
 """;
   
   program.attributes = ["", "", ""];
   return program;
 }
-
-

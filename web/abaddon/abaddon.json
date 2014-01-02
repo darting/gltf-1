@@ -598,244 +598,151 @@
         "Material #107": {
             "instanceTechnique": {
                 "technique": "technique_0",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
-                            0.5879999995231628,
-                            0.5879999995231628,
-                            0.5879999995231628
-                        ]
-                    },
-                    {
-                        "parameter": "emission",
-                        "value": [
+                "values": {
+                    "ambient": [
+                        0.5879999995231628,
+                        0.5879999995231628,
+                        0.5879999995231628
+                    ],
+                    "emission": [
                             0,
                             0,
                             0
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "Map #19"
-                    },
-                    {
-                        "parameter": "normalMap",
-                        "value": "Map #20"
-                    },
-                    {
-                        "parameter": "shininess",
-                        "value": 2
-                    },
-                    {
-                        "parameter": "specular",
-                        "value": [
-                            0.8999999761581421,
-                            0.8999999761581421,
-                            0.8999999761581421
-                        ]
-                    }
-                ]
+                    ],
+                    "diffuse": "Map #19",
+                    "normalMap": "Map #20",
+                    "shininess": 2,
+                    "specular": [
+                        0.8999999761581421,
+                        0.8999999761581421,
+                        0.8999999761581421
+                    ]
+                }
             },
             "name": "Material #107"
         },
         "Material #118": {
             "instanceTechnique": {
                 "technique": "technique_1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
+                "values": {
+                    "ambient": [
                             0.5879999995231628,
                             0.5879999995231628,
                             0.5879999995231628
-                        ]
-                    },
-                    {
-                        "parameter": "emission",
-                        "value": [
+                        ],
+                    "emission": [
                             0,
                             0,
                             0
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "Map #21"
-                    },
-                    {
-                        "parameter": "shininess",
-                        "value": 2
-                    },
-                    {
-                        "parameter": "specular",
-                        "value": [
+                        ],
+                    "diffuse": "Map #21",
+                    "shininess": 2,
+                    "specular": [
                             0.8999999761581421,
                             0.8999999761581421,
                             0.8999999761581421
                         ]
-                    }
-                ]
+                }
             },
             "name": "Material #118"
         },
         "Material #129": {
             "instanceTechnique": {
                 "technique": "technique_1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
+                "values": {
+                    "ambient": [
                             0.5879999995231628,
                             0.5879999995231628,
                             0.5879999995231628
-                        ]
-                    },
-                    {
-                        "parameter": "emission",
-                        "value": [
+                        ],
+                    "emission": [
                             0,
                             0,
                             0
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "Map #23"
-                    },
-                    {
-                        "parameter": "shininess",
-                        "value": 2
-                    },
-                    {
-                        "parameter": "specular",
-                        "value": [
+                        ],
+                    "diffuse": "Map #23",
+                    "shininess": 2,
+                    "specular": [
                             0.8999999761581421,
                             0.8999999761581421,
                             0.8999999761581421
                         ]
-                    }
-                ]
+                }
             },
             "name": "Material #129"
         },
         "Material #140": {
             "instanceTechnique": {
                 "technique": "technique_1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
+                "values": {
+                    "ambient": [
                             0.5879999995231628,
                             0.5879999995231628,
                             0.5879999995231628
-                        ]
-                    },
-                    {
-                        "parameter": "emission",
-                        "value": [
+                        ],
+                    "emission": [
                             0,
                             0,
                             0
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "Map #25"
-                    },
-                    {
-                        "parameter": "shininess",
-                        "value": 2
-                    },
-                    {
-                        "parameter": "specular",
-                        "value": [
+                        ],
+                    "diffuse": "Map #25",
+                    "shininess": 2,
+                    "specular": [
                             0.8999999761581421,
                             0.8999999761581421,
                             0.8999999761581421
                         ]
-                    }
-                ]
+                }
             },
             "name": "Material #140"
         },
         "Material #151": {
             "instanceTechnique": {
                 "technique": "technique_1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
+                "values": {
+                    "ambient": [
                             0.5879999995231628,
                             0.5879999995231628,
                             0.5879999995231628
-                        ]
-                    },
-                    {
-                        "parameter": "emission",
-                        "value": [
+                        ],
+                    "emission": [
                             0,
                             0,
                             0
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "Map #27"
-                    },
-                    {
-                        "parameter": "shininess",
-                        "value": 2
-                    },
-                    {
-                        "parameter": "specular",
-                        "value": [
+                        ],
+                    "diffuse": "Map #27",
+                    "shininess": 2,
+                    "specular": [
                             0.8999999761581421,
                             0.8999999761581421,
                             0.8999999761581421
                         ]
-                    }
-                ]
+                }
             },
             "name": "Material #151"
         },
         "Material #162": {
             "instanceTechnique": {
                 "technique": "technique_1",
-                "values": [
-                    {
-                        "parameter": "ambient",
-                        "value": [
+                "values": {
+                    "ambient": [
                             0.5879999995231628,
                             0.5879999995231628,
                             0.5879999995231628
-                        ]
-                    },
-                    {
-                        "parameter": "emission",
-                        "value": [
+                        ],
+                    "emission": [
                             0,
                             0,
                             0
-                        ]
-                    },
-                    {
-                        "parameter": "diffuse",
-                        "value": "Map #29"
-                    },
-                    {
-                        "parameter": "shininess",
-                        "value": 2
-                    },
-                    {
-                        "parameter": "specular",
-                        "value": [
+                        ],
+                    "diffuse": "Map #29",
+                    "shininess": 2,
+                    "specular": [
                             0.8999999761581421,
                             0.8999999761581421,
                             0.8999999761581421
                         ]
-                    }
-                ]
+                }
             },
             "name": "Material #162"
         }
