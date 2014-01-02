@@ -40,7 +40,7 @@ class Loader {
   
   handleBuffers(Map description) {
     description.forEach((k, v){
-      var buffer = new BufferRefs();
+      var buffer = new Buffer();
       buffer.path = _uri.resolve(v["path"]).toString();
       buffer.byteLength = v["byteLength"];
       buffer.type = v["type"];

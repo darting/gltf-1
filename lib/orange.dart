@@ -19,7 +19,7 @@ part 'src/node.dart';
 part 'src/camera.dart';
 part 'src/mesh.dart';
 part 'src/primitive.dart';
-part 'src/buffer_refs.dart';
+part 'src/buffer.dart';
 part 'src/buffer_view.dart';
 part 'src/indices.dart';
 part 'src/material.dart';
@@ -41,7 +41,6 @@ part 'src/resources.dart';
 part 'src/light.dart';
 part 'src/trackball_controls.dart';
 part 'src/color.dart';
-part 'src/matrix_helper.dart';
 
 part 'src/materials/color_material.dart';
 part 'src/materials/texture_material.dart';

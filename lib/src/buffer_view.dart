@@ -2,7 +2,7 @@ part of orange;
 
 
 class BufferView {
-  BufferRefs bufferRefs;
+  Buffer bufferRefs;
   int byteOffset;
   int byteLength;
   int target;

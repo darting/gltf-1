@@ -1,7 +1,7 @@
 part of orange;
 
 
-class BufferRefs {
+class Buffer {
   String path;
   int byteLength;
   String type;
@@ -9,7 +9,7 @@ class BufferRefs {
   
   OnlyOnce _loadTask;
   
-  BufferRefs() {
+  Buffer() {
     _loadTask = new OnlyOnce(() {
       html.HttpRequest.request(path, responseType: "arraybuffer").then((r){
         bytes = r.response;
