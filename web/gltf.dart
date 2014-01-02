@@ -20,8 +20,8 @@ void main() {
 //  camera.position.y = 700.0;
 //  camera.position.z = 1500.0;
   
-  camera.translate(new Vector3(0.0, 0.0, -700.0));
-  camera.lookAt(new Vector3(0.0, 0.0, 1.0));
+  camera.translate(new Vector3(0.0, 0.0, 700.0));
+//  camera.lookAt(new Vector3(0.0, 0.0, 1.0));
   
 //  camera.updateMatrixWorld();
 //  camera.lookAt(new Vector3.zero());
@@ -41,8 +41,9 @@ void main() {
     s.nodes.forEach((n) {
 //      n.rotate(90.0, WORLD_LEFT);
 //      n.rotate(90.0, WORLD_RIGHT);
-        n.rotateX(30.0);
-//        n.rotateY(10.0);
+        n.rotateX(radians(-90.0));
+//        n.rotateZ(30.0);
+        n.rotateZ(radians(-90.0));
       
     });
     
