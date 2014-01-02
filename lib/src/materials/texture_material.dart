@@ -2,9 +2,9 @@ part of orange;
 
 
 Pass passForTextureMaterial = _makePassForTextureMaterial();
-Technique techniqueForTextureMaterial = _makeTechniqueForTextureMaterial(passForTextureMaterial);
+Technique techniqueForTextureMaterial = _makeTechniqueForTextureMaterial();
 
-Technique _makeTechniqueForTextureMaterial(Pass pass) {
+Technique _makeTechniqueForTextureMaterial() {
   var technique = new Technique();
   technique.parameters = {
      "modelViewMatrix": {"semantic": "MODELVIEW", "type": 35676},
@@ -16,7 +16,7 @@ Technique _makeTechniqueForTextureMaterial(Pass pass) {
      "diffuse": {"type": 35678}
   };
   technique.pass = "defaultPass";
-  technique.passes = {"defaultPass": pass};
+  technique.passes = {"defaultPass": passForTextureMaterial};
   return technique;
 }
 
