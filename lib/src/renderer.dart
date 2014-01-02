@@ -34,7 +34,7 @@ class Renderer {
       mesh.primitives.forEach((primitive) {
         if(primitive.ready) {
           var material = primitive.material;
-//          material = DebugMaterial;
+          material = new ColorMaterial(new Color.fromHex(0x0000ff));
           var technique = material.technique;
           var pass = technique.passes[material.technique.pass];
           var program = pass.program;

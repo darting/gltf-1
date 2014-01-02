@@ -854,7 +854,8 @@
                         "TEXCOORD_0": "attribute_3",
                         "WEIGHT": "attribute_5"
                     },
-                    "skin": "skin_0"
+                    "skin": "skin_0",
+                    "primitive": 4
                 }
             ]
         },
@@ -871,7 +872,8 @@
                         "TEXCOORD_0": "attribute_9",
                         "WEIGHT": "attribute_11"
                     },
-                    "skin": "skin_1"
+                    "skin": "skin_1",
+                    "primitive": 4
                 }
             ]
         },
@@ -888,7 +890,8 @@
                         "TEXCOORD_0": "attribute_15",
                         "WEIGHT": "attribute_17"
                     },
-                    "skin": "skin_2"
+                    "skin": "skin_2",
+                    "primitive": 4
                 }
             ]
         },
@@ -905,7 +908,8 @@
                         "TEXCOORD_0": "attribute_21",
                         "WEIGHT": "attribute_23"
                     },
-                    "skin": "skin_3"
+                    "skin": "skin_3",
+                    "primitive": 4
                 }
             ]
         },
@@ -922,7 +926,8 @@
                         "TEXCOORD_0": "attribute_27",
                         "WEIGHT": "attribute_29"
                     },
-                    "skin": "skin_4"
+                    "skin": "skin_4",
+                    "primitive": 4
                 }
             ]
         },
@@ -939,7 +944,8 @@
                         "TEXCOORD_0": "attribute_33",
                         "WEIGHT": "attribute_35"
                     },
-                    "skin": "skin_5"
+                    "skin": "skin_5",
+                    "primitive": 4
                 }
             ]
         }

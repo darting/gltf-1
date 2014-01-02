@@ -40,9 +40,10 @@ part 'src/only_once.dart';
 part 'src/resources.dart';
 part 'src/light.dart';
 part 'src/trackball_controls.dart';
-part 'src/debug.dart';
 part 'src/color.dart';
 part 'src/matrix_helper.dart';
+
+part 'src/materials/color_material.dart';
 
 part 'src/math/matrix4.dart';
 part 'src/math/matrix3.dart';
